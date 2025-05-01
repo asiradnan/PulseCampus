@@ -27,7 +27,7 @@ class Teacher(models.Model):
     dept_name=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
     # POSITION_CHOICES=[('Chairman','Chairman'),('Vice Chairman','Vice Chairman'),('Member','Member')]
     # dept_designation=models.CharField(max_length=100, choices=POSITION_CHOICES)
-    joining_date=models.DateField(validators=[validators.date_validator])
+    joining_date=models.DateField(validators=[validators.no_future_date])
     address=models.TextField(max_length=500)
     designation=models.CharField(max_length=100,validators=[validators.no_digit])
 
