@@ -2,9 +2,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PulseCampus</title>
+    {% block title %}
+        <title>PulseCampus</title>
+    {% endblock %}
+    
 </head>
 <body>
-    <p>Hello World!</p>
+    <nav>
+        {% if user.is_authenticated %} <p>Logged In</p>
+        {% else %} <p>Not logged in</p>
+        {% endif %} 
+    </nav>
+    {% block content %}
+    {% endblock %}
 </body>
 </html>
