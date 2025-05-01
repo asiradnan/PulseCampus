@@ -2,10 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 from PulseCampus import validators
 from classes.models import Class
+from departments.models import Department
 
 class Student(models.Model):
     user=models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
-    name=models.CharField(max_length=255,validators=[validators.name_validator])
+    name=models.CharField(max_length=255,validators=[validators.no_digit])
     student_id=models.CharField(max_length=10,validators=[validators.id_validate])
     student_class=models.ForeignKey(Class,on_delete=models.SET_NULL,null=True)
     address=models.TextField(max_length=500)
@@ -16,6 +17,22 @@ class Student(models.Model):
     def make_captain(self):
         self.is_captain = True
         self.save()
+    def save(self,*args, **kwargs):
+        self.name = self.name.title()
+        super().save(*args, **kwargs)
+
+class Teacher(models.Model):
+    user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
+    name=models.CharField(max_length=255,validators=[validators.no_digit])
+    dept_name=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
+    # POSITION_CHOICES=[('Chairman','Chairman'),('Vice Chairman','Vice Chairman'),('Member','Member')]
+    # dept_designation=models.CharField(max_length=100, choices=POSITION_CHOICES)
+    joining_date=models.DateField(validators=[validators.date_validator])
+    address=models.TextField(max_length=500)
+    designation=models.CharField(max_length=100,validators=[validators.no_digit])
+
+    def __str__(self):
+        return self.name
     def save(self,*args, **kwargs):
         self.name = self.name.title()
         super().save(*args, **kwargs)

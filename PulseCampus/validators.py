@@ -1,16 +1,12 @@
 from django.core.exceptions import ValidationError
-
-def name_validator(value):
-    if any(char.isdigit() for char in value):
-        raise ValidationError('Name should not contain digits.')
     
 def id_validate(x):
     if len(x) != 6 or not x.isdigit():
         raise ValidationError('Enter your valid Student ID.')
 
-def desig_validator(value):
+def no_digit(value):
     if any(char.isdigit() for char in value):
-        raise ValidationError('Designation should not contain digits.')
+        raise ValidationError('Should not contain digits.')
     
 def date_validator(value):
     if value > date.today():
