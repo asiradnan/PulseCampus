@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
-    
+from datetime import date
+
 def id_validate(x):
     if len(x) != 6 or not x.isdigit():
         raise ValidationError('Enter your valid Student ID.')
@@ -8,7 +9,7 @@ def no_digit(value):
     if any(char.isdigit() for char in value):
         raise ValidationError('Should not contain digits.')
     
-def date_validator(value):
+def no_future_date(value):
     if value > date.today():
         raise ValidationError('Date cannot be in the future.')
     
