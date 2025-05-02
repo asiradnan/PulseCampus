@@ -8,14 +8,15 @@ from . import forms
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
         user  = authenticate(request, username = username, password = password)
         if not user:
-            messages.add_message(request, messages.ERROR, 'Invalid username or password')
-            return redirect('login')
+            messages.error(request, 'Invalid username or password')
+            return redirect('/users/login/')
         login(request, user)
         return redirect('home')
+    return render(request, 'login.html')
 
 def signup(request):
     return render(request,'signup.html')
@@ -32,7 +33,13 @@ def _role_based_signup(request, form_class):
             password = form.cleaned_data['password']
             confirm_password = form.cleaned_data['confirm_password']
             if password != confirm_password:
-                messages.add_message(request, messages.ERROR, "Passwords do not match!")
+                messages.error(request, "Passwords do not match!")
+                return render(request,'role_based_signup.html',{'form':form})
+            if User.objects.filter(username = username).exists():
+                messages.error(request, "Username already exists!")
+                return render(request,'role_based_signup.html',{'form':form})
+            if User.objects.filter(email = email).exists():
+                messages.error(request, "Email already exists!")
                 return render(request,'role_based_signup.html',{'form':form})
             try:
                 validate_password(password)
@@ -42,9 +49,12 @@ def _role_based_signup(request, form_class):
             user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
             profile.user = user
             profile.save()
-            return redirect('login')
+            messages.success(request, "Account created successfully!")
+            return redirect('/users/login/')
         else:
-            messages.add_message(request, messages.ERROR, "Form is not valid!")
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = form_class()
     return render(request,'role_based_signup.html',{'form':form})   
