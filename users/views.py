@@ -14,6 +14,7 @@ def login_view(request):
         password = request.POST.get('password')
         if '@' in username_or_email:
             try:
+                email = email.lower().strip()
                 user = User.objects.get(email=username_or_email)
                 user = authenticate(request, username=user.username, password=password)
             except User.DoesNotExist:
@@ -63,6 +64,7 @@ def _role_based_signup(request, form_class):
             if User.objects.filter(email = email).exists():
                 messages.error(request, "Email already exists!")
                 return render(request,'role_based_signup.html',{'form':form})
+            email = email.lower().strip()
             user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
             profile.user = user
             profile.save()
