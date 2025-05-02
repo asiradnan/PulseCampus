@@ -5,8 +5,7 @@ from classes.models import Class
 from departments.models import Department
 
 class Student(models.Model):
-    user=models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
-    name=models.CharField(max_length=255,validators=[validators.no_digit])
+    user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
     student_id=models.CharField(max_length=10,validators=[validators.id_validate])
     student_class=models.ForeignKey(Class,on_delete=models.SET_NULL,null=True)
     address=models.TextField(max_length=500)
@@ -23,7 +22,6 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
-    name=models.CharField(max_length=255,validators=[validators.no_digit])
     dept_name=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
     # POSITION_CHOICES=[('Chairman','Chairman'),('Vice Chairman','Vice Chairman'),('Member','Member')]
     # dept_designation=models.CharField(max_length=100, choices=POSITION_CHOICES)
@@ -36,3 +34,17 @@ class Teacher(models.Model):
     def save(self,*args, **kwargs):
         self.name = self.name.title()
         super().save(*args, **kwargs)
+
+
+class Principal(models.Model):
+    user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
+    POSITION_CHOICES=[('Principal','Principal'),('Vice Principal','Vice Principal')]
+    designation=models.CharField(max_length=100, choices=POSITION_CHOICES)
+    joining_date=models.DateField(validators=[validators.no_future_date])
+    address=models.TextField(max_length=500)
+    room_number=models.CharField(max_length=4,validators=[validators.all_digits])
+    building_number=models.CharField(max_length=4,validators=[validators.all_digits])
+
+    def __str__(self):
+        return self.user.first_name + ' ' + self.user.last_name
+

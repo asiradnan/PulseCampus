@@ -1,24 +1,21 @@
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block 'title' %} PulseCampus {% endblock %}</title>
+    <title>Principal Sign Up</title>
 </head>
-
 <body>
-    <nav>
-        {% if user.is_authenticated %} <p>Logged In</p>
-        {% else %} <p><a href="{% url 'users:signup' %}">Sign Up</a></p>
-        {% endif %}
-    </nav>
+    <form action="/users/signup/principal/" method="post">
+        {% csrf_token %}    
+        {{form.as_p}}
+        <button type="submit">Sign Up</button>
+    </form>
     {% block 'content' %}
     {% endblock %}
     {% if messages %}
         {% for message in messages %}
-            {{message}}
+            <p>{{message}}</p>
         {% endfor %}
     {% endif %}
 </body>
-
 </html>

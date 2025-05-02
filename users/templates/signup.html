@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block 'title' %} Sign Up {% endblock %}
+
+{% block 'content' %}
+<a href="{% url 'users:student_signup' %}">Sign Up as a Student</a>
+<a href="{% url 'users:teacher_signup' %}">Sign Up as a Teacher</a>
+<a href="{% url 'users:principal_signup' %}">Sign Up as a Principal</a>
+{% endblock %}

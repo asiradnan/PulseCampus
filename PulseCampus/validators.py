@@ -18,6 +18,6 @@ def contact_validator(x):
         raise ValidationError("Enter a valid Contact Number")
     
 def all_digits(value):
-    if not value.is_digit():
+    if not value.isdigit():
         raise ValidationError("Must be all digits")
    
