@@ -2,6 +2,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from .models import Principal
 from django.utils import timezone
+
+
 class PrincipalModelTest(TestCase):
     def test_principal_creation(self):
         user = User.objects.create_user(username='testuser', password='testpassword')
@@ -12,6 +14,7 @@ class PrincipalModelTest(TestCase):
             room_number='1010',
             building_number='2020'
         )
+        principal.full_clean() 
         self.assertEqual(principal.user, user)
         self.assertEqual(principal.designation, 'Principal')
         self.assertEqual(principal.joining_date, timezone.now().date())
