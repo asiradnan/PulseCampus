@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Departments{% endblock %}
+
+{% block content %}
+<h1>Departments</h1>
+{% if department_list %}    
+<ul>
+    {% for department in department_list %}
+    <li>{{ department.name }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>There are no departments.</p>
+{% endif %}
+{% endblock %}

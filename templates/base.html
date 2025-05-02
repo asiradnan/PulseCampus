@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <link rel="stylesheet" href="{% static  'base.css'  %}">
-    <title>{% block 'title' %} PulseCampus {% endblock %}</title>
+    <title>{% block title %} PulseCampus {% endblock %}</title>
 </head>
 
 <body>
@@ -16,7 +16,7 @@
             <p><a href="{% url 'users:login' %}">Log In</a></p> 
         {% endif %}
     </nav>
-    {% block 'content' %}
+    {% block content %}
     {% endblock %}
     {% if messages %}
         {% for message in messages %}
