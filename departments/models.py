@@ -8,6 +8,3 @@ class Department(models.Model):
 
     def __str__(self):
         return self.name
-    def save(self, force_insert=False, force_update=False):
-        self.name = self.name.title()
-        super(Department, self).save(force_insert, force_update)
