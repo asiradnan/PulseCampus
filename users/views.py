@@ -7,19 +7,23 @@ from django.contrib import messages
 from . import forms
 
 def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('homepage')
     if request.method == 'POST':
         username_or_email = request.POST.get('username or email')
         password = request.POST.get('password')
         if '@' in username_or_email:
             try:
                 user = User.objects.get(email=username_or_email)
+                user = authenticate(request, username=user.username, password=password)
             except User.DoesNotExist:
                 user = None
         else:
             user = authenticate(request, username=username_or_email, password=password)
-        if not user:
-            messages.error(request, 'Invalid username or password')
-            return redirect('/users/login/')
+        if user is None:
+            messages.error(request, 'Invalid credentials.')
+            return redirect('users:login')
+        messages.success(request, 'Logged in successfully!')   
         login(request, user)
         return redirect('homepage')
     return render(request, 'login.html')
@@ -45,6 +49,11 @@ def _role_based_signup(request, form_class):
             if '@' in username and '.' in username.split('@')[1]:
                 messages.error(request, "Your username appears to be an email address. Please use a simple username.")
                 return render(request,'role_based_signup.html',{'form':form})
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
+                return render(request,'role_based_signup.html',{'form':form})
             if password != confirm_password:
                 messages.error(request, "Passwords do not match!")
                 return render(request,'role_based_signup.html',{'form':form})
@@ -54,16 +63,11 @@ def _role_based_signup(request, form_class):
             if User.objects.filter(email = email).exists():
                 messages.error(request, "Email already exists!")
                 return render(request,'role_based_signup.html',{'form':form})
-            try:
-                validate_password(password)
-            except ValidationError as e:
-                messages.error(request, e.messages[0])
-                return render(request,'role_based_signup.html',{'form':form})
             user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
             profile.user = user
             profile.save()
             messages.success(request, "Account created successfully!")
-            return redirect('/users/login/')
+            return redirect('users:login')
         else:
             for field, errors in form.errors.items():
                 for error in errors:
