@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
@@ -8,15 +8,25 @@ from . import forms
 
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username_or_email = request.POST.get('username or email')
         password = request.POST.get('password')
-        user  = authenticate(request, username = username, password = password)
+        if '@' in username_or_email:
+            try:
+                user = User.objects.get(email=username_or_email)
+            except User.DoesNotExist:
+                user = None
+        else:
+            user = authenticate(request, username=username_or_email, password=password)
         if not user:
             messages.error(request, 'Invalid username or password')
             return redirect('/users/login/')
         login(request, user)
-        return redirect('home')
+        return redirect('homepage')
     return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect(request.GET.get('next', '/'))
 
 def signup(request):
     return render(request,'signup.html')
@@ -32,6 +42,9 @@ def _role_based_signup(request, form_class):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             confirm_password = form.cleaned_data['confirm_password']
+            if '@' in username and '.' in username.split('@')[1]:
+                messages.error(request, "Your username appears to be an email address. Please use a simple username.")
+                return render(request,'role_based_signup.html',{'form':form})
             if password != confirm_password:
                 messages.error(request, "Passwords do not match!")
                 return render(request,'role_based_signup.html',{'form':form})

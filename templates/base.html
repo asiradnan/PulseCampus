@@ -8,7 +8,7 @@
 
 <body>
     <nav>
-        {% if user.is_authenticated %} <p>Logged In</p>
+        {% if user.is_authenticated %} <p><a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a></p>
         {% else %} <p><a href="{% url 'users:signup' %}">Sign Up</a></p>
         {% endif %}
     </nav>
