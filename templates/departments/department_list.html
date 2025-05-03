@@ -3,13 +3,13 @@
 {% block title %}Departments{% endblock %}
 
 {% block content %}
-<h1>Departments</h1>
-{% if department_list %}    
-<ul>
+{% if user.is_authenticated and user.principal %}
+<a href="{% url 'departments:department_create' %}">Create Department</a>
+{% endif %}
+{% if department_list %}
     {% for department in department_list %}
-    <li>{{ department.name }}</li>
+    <a href="{%url 'departments:department_detail' pk=department.pk %}">{{ department.name }}</a>
     {% endfor %}
-</ul>
 {% else %}
 <p>There are no departments.</p>
 {% endif %}

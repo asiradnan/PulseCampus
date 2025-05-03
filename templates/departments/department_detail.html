@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}{{object}} Department{% endblock %}
+{% block content %}
+<a href="{% url 'departments:department_update' pk=object.pk %}">Edit Department</a>
+<p>Room Number: {{object.room_number}}</p>
+<p>Building Number: {{object.building_number}}</p>
+{% endblock %}
