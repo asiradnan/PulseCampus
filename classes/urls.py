@@ -8,5 +8,5 @@ urlpatterns = [
     path('class_list/',views.ClassListView.as_view(),name='class_list'),
     path('<str:pk>/',views.ClassDetailView.as_view(),name='class_detail'),
     path('<str:pk>/update/',views.ClassUpdateView.as_view(),name='class_update'),
-    path('<str:pk>/delete/',views.ClassDeleteView.as_view(),name='class_delete'),
+    path('<str:pk>/delete/',views.class_delete,name='class_delete'),
 ]

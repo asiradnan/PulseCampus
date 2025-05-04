@@ -2,6 +2,11 @@
 {% block title %}   {{class}} {% endblock %}
 {% block content %}
 <a href="{% url 'classes:class_update' class.pk %}">Edit Class</a>  
+<form method="post" action="{% url 'classes:class_delete' class.pk %}">
+    {% csrf_token %}
+<button type="submit">Delete</button>
+
+</form>
 <h1>{{class}}</h1>
 Room Number: {{ class.room_number}}
 Building Number: {{ class.building_number}}
