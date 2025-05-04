@@ -22,7 +22,7 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
-    dept_name=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
+    department=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
     # POSITION_CHOICES=[('Chairman','Chairman'),('Vice Chairman','Vice Chairman'),('Member','Member')]
     # dept_designation=models.CharField(max_length=100, choices=POSITION_CHOICES)
     joining_date=models.DateField(validators=[validators.no_future_date])

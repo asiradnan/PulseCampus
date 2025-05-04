@@ -22,11 +22,11 @@ class TeacherForm(forms.ModelForm):
     confirm_password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
         model = models.Teacher
-        fields = ['dept_name', 'joining_date', 'address', 'designation']
+        fields = ['department', 'joining_date', 'address', 'designation']
         widgets = {
             'joining_date': forms.widgets.DateInput(attrs={'type': 'date'})
         }
-    field_order = ['first_name','last_name', 'username', 'email', 'password', 'confirm_password', 'name', 'dept_name', 'joining_date', 'address', 'designation']
+    field_order = ['first_name','last_name', 'username', 'email', 'password', 'confirm_password', 'name', 'department', 'joining_date', 'address', 'designation']
         
 class PrincipalForm(forms.ModelForm):
     first_name = forms.CharField(min_length=1, max_length=250)
