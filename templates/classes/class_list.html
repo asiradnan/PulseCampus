@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %} Classes {% endblock %}
+{% block content %}
+<a href="{% url 'classes:class_create' %}">Create Class</a>
+{% if class_list %}
+    <ul>
+        {% for class in class_list %}
+        <li><a href="{% url 'classes:class_detail' class.pk %}">{{class}}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No classes are available.</p>
+{% endif %}
+{% endblock %}  
