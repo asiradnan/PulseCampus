@@ -11,7 +11,7 @@ class StudentForm(forms.ModelForm):
     class Meta:
         model = models.Student
         fields = ['student_id', 'student_class', 'address']
-    field_order = ['first_name','last_name', 'username', 'email' 'password', 'confirm_password', 'name', 'student_id', 'student_class', 'address']
+    field_order = ['first_name','last_name', 'username', 'email', 'password', 'confirm_password', 'student_id', 'student_class', 'address']
 
 class TeacherForm(forms.ModelForm):
     first_name = forms.CharField(min_length=1, max_length=250)
@@ -26,7 +26,7 @@ class TeacherForm(forms.ModelForm):
         widgets = {
             'joining_date': forms.widgets.DateInput(attrs={'type': 'date'})
         }
-    field_order = ['first_name','last_name', 'username', 'email', 'password', 'confirm_password', 'name', 'department', 'joining_date', 'address', 'designation']
+    field_order = ['first_name','last_name', 'username', 'email', 'password', 'confirm_password', 'department', 'joining_date', 'address', 'designation']
         
 class PrincipalForm(forms.ModelForm):
     first_name = forms.CharField(min_length=1, max_length=250)

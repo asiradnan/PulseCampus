@@ -5,6 +5,7 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 from . import forms
+from django.db import transaction
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -40,40 +41,57 @@ def _role_based_signup(request, form_class):
     if request.method == 'POST':
         form =  form_class(request.POST)
         if form.is_valid():
-            profile = form.save(commit=False)
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            username = form.cleaned_data['username']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            confirm_password = form.cleaned_data['confirm_password']
-            if '@' in username and '.' in username.split('@')[1]:
-                messages.error(request, "Your username appears to be an email address. Please use a simple username.")
-                return render(request,'role_based_signup.html',{'form':form})
             try:
-                validate_password(password)
-            except ValidationError as e:
-                messages.error(request, e.messages[0])
+                # Start a transaction
+                with transaction.atomic():
+                    first_name = form.cleaned_data['first_name']
+                    last_name = form.cleaned_data['last_name']
+                    username = form.cleaned_data['username']
+                    email = form.cleaned_data['email']
+                    password = form.cleaned_data['password']
+                    confirm_password = form.cleaned_data['confirm_password']
+                    
+                    if '@' in username and '.' in username.split('@')[1]:
+                        messages.error(request, "Your username appears to be an email address. Please use a simple username.")
+                        return render(request,'role_based_signup.html',{'form':form})
+                    
+                    try:
+                        validate_password(password)
+                    except ValidationError as e:
+                        messages.error(request, e.messages[0])
+                        return render(request,'role_based_signup.html',{'form':form})
+                    
+                    if password != confirm_password:
+                        messages.error(request, "Passwords do not match!")
+                        return render(request,'role_based_signup.html',{'form':form})
+                    
+                    if User.objects.filter(username=username).exists():
+                        messages.error(request, "Username already exists!")
+                        return render(request,'role_based_signup.html',{'form':form})
+                    
+                    if User.objects.filter(email=email).exists():
+                        messages.error(request, "Email already exists!")
+                        return render(request,'role_based_signup.html',{'form':form})
+                    
+                    email = email.lower().strip()
+                    user = User.objects.create_user(
+                        username=username, 
+                        password=password, 
+                        first_name=first_name, 
+                        last_name=last_name, 
+                        email=email
+                    )
+                    
+                    profile = form.save(commit=False)
+                    profile.user = user
+                    profile.save()  # This is where the role creation happens
+                    
+                    messages.success(request, "Account created successfully!")
+                    return redirect('users:login')
+                    
+            except Exception as e:
+                messages.error(request, f"An error occurred during registration: {str(e)}")
                 return render(request,'role_based_signup.html',{'form':form})
-            if password != confirm_password:
-                messages.error(request, "Passwords do not match!")
-                return render(request,'role_based_signup.html',{'form':form})
-            if User.objects.filter(username = username).exists():
-                messages.error(request, "Username already exists!")
-                return render(request,'role_based_signup.html',{'form':form})
-            if User.objects.filter(email = email).exists():
-                messages.error(request, "Email already exists!")
-                return render(request,'role_based_signup.html',{'form':form})
-            email = email.lower().strip()
-            user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
-            profile.user = user
-            profile.save()
-            messages.success(request, "Account created successfully!")
-            return redirect('users:login')
-        else:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{field}: {error}")
     else:
         form = form_class()
     return render(request,'role_based_signup.html',{'form':form})   
