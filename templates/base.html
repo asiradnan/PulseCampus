@@ -10,7 +10,7 @@
 
 <body>
     <nav>
-    
+        <h1>Pulse Campus</h1>
         <a href="{% url 'departments:department_list' %}">Departments</a>
         <a href="{% url 'classes:class_list' %}">Classes</a>
         {% if user.is_authenticated %} <p><a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a></p>
