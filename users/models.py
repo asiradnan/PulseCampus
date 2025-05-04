@@ -22,7 +22,7 @@ class Student(models.Model):
 
 class Teacher(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
-    department=models.ForeignKey(Department,on_delete=models.SET_NULL, null=True)
+    department=models.ForeignKey(Department,on_delete=models.CASCADE)
     # POSITION_CHOICES=[('Chairman','Chairman'),('Vice Chairman','Vice Chairman'),('Member','Member')]
     # dept_designation=models.CharField(max_length=100, choices=POSITION_CHOICES)
     joining_date=models.DateField(validators=[validators.no_future_date])
@@ -30,10 +30,8 @@ class Teacher(models.Model):
     designation=models.CharField(max_length=100,validators=[validators.no_digit])
 
     def __str__(self):
-        return self.name
-    def save(self,*args, **kwargs):
-        self.name = self.name.title()
-        super().save(*args, **kwargs)
+        return self.user.first_name + ' ' + self.user.last_name
+
 
 
 class Principal(models.Model):
