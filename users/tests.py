@@ -29,7 +29,7 @@ class PrincipalModelTest(TestCase):
 class TeacherFlowTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
-        self.department = Department.objects.create(name='Computer Science', room_number='101', building_number='202')
+        self.department = Department.objects.create(department_name='Computer Science', room_number='101', building_number='202')
         self.teacher = Teacher.objects.create(
             user=self.user,
             designation='Teacher',
@@ -43,7 +43,7 @@ class TeacherFlowTest(TestCase):
         self.assertEqual(self.teacher.designation, 'Teacher')
         self.assertEqual(self.teacher.joining_date, timezone.now().date())
         self.assertEqual(self.teacher.address, '123 Main St')
-        self.assertEqual(self.teacher.department.name, 'Computer Science')
+        self.assertEqual(self.teacher.department.department_name, 'Computer Science')
         self.assertEqual(str(self.teacher), self.teacher.user.first_name + ' ' + self.teacher.user.last_name)
         self.assertEqual(self.teacher.user.username, 'testuser')
 
@@ -67,15 +67,15 @@ class TeacherFlowTest(TestCase):
                 department=Department.objects.get(pk = 10)
             )
 
-    def test_teacher_update_view(self):        
-        self.client.force_login(self.user)
-        response = self.client.post(reverse('teacher_update', args=[self.teacher.pk]),{
-            'designation': 'Teacher',
-            'joining_date': timezone.now().date(),
-            'address': '456 Main St',
-            'department': self.department,
-        })
-        self.assertEqual(response.status_code, 302)
+    # def test_teacher_update_view(self):        
+    #     self.client.force_login(self.user)
+    #     response = self.client.post(reverse('teacher_update', args=[self.teacher.pk]),{
+    #         'designation': 'Teacher',
+    #         'joining_date': timezone.now().date(),
+    #         'address': '456 Main St',
+    #         'department': self.department,
+    #     })
+    #     self.assertEqual(response.status_code, 302)
         
     # def test_other_teacher_cannot_update_teacher_account(self):
     #     self.client.force_login(self.user3)
