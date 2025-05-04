@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
 from . import models
 from PulseCampus.mixins import PrincipalRequiredMixin
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import login_required
 from PulseCampus.mixins import is_principal
 from django.contrib import messages
 
