@@ -5,12 +5,7 @@ from django.views.generic.edit import UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from .models import Department
-
-class PrincipalRequiredMixin(UserPassesTestMixin):
-    """Only allows principals to access the view."""
-    raise_exception = PermissionDenied  
-    def test_func(self):
-        return hasattr(self.request.user, 'principal')
+from PulseCampus.mixins import PrincipalRequiredMixin
 
 
 class DepartmentListView(ListView):
