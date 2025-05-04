@@ -4,6 +4,7 @@ from .models import Principal, Teacher
 from django.utils import timezone
 from departments.models import Department
 from django.db.utils import IntegrityError
+from django.urls import reverse
 
 class PrincipalModelTest(TestCase):
     def test_principal_creation(self):
@@ -66,20 +67,25 @@ class TeacherFlowTest(TestCase):
                 department=Department.objects.get(pk = 10)
             )
 
-    # def test_teacher_update_view(self):        
-    #     self.client.force_login(self.teacher.user)
+    def test_teacher_update_view(self):        
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('teacher_update', args=[self.teacher.pk]),{
+            'designation': 'Teacher',
+            'joining_date': timezone.now().date(),
+            'address': '456 Main St',
+            'department': self.department,
+        })
+        self.assertEqual(response.status_code, 302)
+        
+    # def test_other_teacher_cannot_update_teacher_account(self):
+    #     self.client.force_login(self.user3)
     #     response = self.client.post(reverse('teacher_update', args=[self.teacher.pk]),{
     #         'designation': 'Teacher',
     #         'joining_date': timezone.now().date(),
     #         'address': '456 Main St',
     #         'department': self.department,
     #     })
-    #     self.assertEqual(response.status_code, 302)
-    #     self.teacher.refresh_from_db()
-    #     self.assertEqual(self.teacher.address, '456 Main St')
-    #     self.assertEqual(self.teacher.department.name, 'Computer Science')
-    #     self.assertEqual(str(self.teacher), self.teacher.user.first_name + ' ' + self.teacher.user.last_name)
-    #     self.assertEqual(self.teacher.user.username, 'testuser')
+    #     self.assertEqual(response.status_code, 403)
     
     # def test_teacher_delete_account(self):
     #     self.client.force_login(self.user)

@@ -14,8 +14,8 @@ def login_view(request):
         password = request.POST.get('password')
         if '@' in username_or_email:
             try:
-                email = email.lower().strip()
-                user = User.objects.get(email=username_or_email)
+                email = username_or_email.lower().strip()
+                user = User.objects.get(email=email)
                 user = authenticate(request, username=user.username, password=password)
             except User.DoesNotExist:
                 user = None

@@ -2,10 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Principal Sign Up</title>
+    <title>Sign Up</title>
 </head>
 <body>
-    <form action="/users/signup/principal/" method="post">
+    <form method="post">
         {% csrf_token %}    
         {{form.as_p}}
         <button type="submit">Sign Up</button>
