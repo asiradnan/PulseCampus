@@ -10,6 +10,7 @@
 
 <body>
     <nav>
+    
         <a href="{% url 'departments:department_list' %}">Departments</a>
         <a href="{% url 'classes:class_list' %}">Classes</a>
         {% if user.is_authenticated %} <p><a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a></p>
@@ -18,6 +19,7 @@
             <p><a href="{% url 'users:login' %}">Log In</a></p> 
         {% endif %}
     </nav>
+    <h1>Pulse Campus</h1>
     {% block content %}
     {% endblock %}
     {% if messages %}
