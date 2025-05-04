@@ -33,6 +33,7 @@ class DepartmentTest(TestCase):
         self.assertEqual(response.status_code, 302)
         department.refresh_from_db()
         self.assertEqual(department.name, 'Test Name Updated')
+        
     def test_other_than_principal_cannot_update_department(self):
         self.client.force_login(self.other_user)
         department = Department.objects.create(name='Test Name', room_number='101', building_number='202')
