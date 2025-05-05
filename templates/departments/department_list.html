@@ -8,7 +8,7 @@
 {% endif %}
 {% if department_list %}
     {% for department in department_list %}
-    <a href="{%url 'departments:department_detail' pk=department.pk %}">{{ department.name }}</a>
+    <a href="{%url 'departments:department_detail' pk=department.pk %}">{{ department }}</a>
     {% endfor %}
 {% else %}
 <p>There are no departments.</p>

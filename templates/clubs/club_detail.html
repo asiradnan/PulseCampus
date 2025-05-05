@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{object}} Club{% endblock %}
+
+
+{% block content %}
+
+{% if request.user.is_authenticated and request.user.teacher and request.user.teacher == object.supervisor %}    
+<a href="{% url 'clubs:club_update' pk=object.pk %}">Edit Club</a>
+{% endif %} 
+<p>Established On: {{object.established}}</p>
+
+{% endblock %}

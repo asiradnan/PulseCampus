@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}Clubs{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+    {% if user.principal or user.teacher %}
+    <a href="{% url 'clubs:club_create' %}">Create Club</a>
+    {% endif %}
+{% endif %}
+
+{% if club_list %}
+    {% for club in club_list %}
+    <a href="{%url 'clubs:club_detail' pk=club.pk %}">{{ club }}</a><br>
+    {% endfor %}
+{% else %}
+<p>There are no clubs.</p>
+{% endif %}
+{% endblock %}

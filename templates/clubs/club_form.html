@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}  Create New Club {% endblock %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">
+            {% if request.resolver_match.url_name == 'club_create' %}
+            Create
+            {% else %}
+            Update
+            {% endif %}
+        </button>
+    </form>
+    
+</body>
+</html>
+{% endblock %}  

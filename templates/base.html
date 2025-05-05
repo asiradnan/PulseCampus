@@ -12,7 +12,12 @@
     <nav>
         <a href="{% url 'departments:department_list' %}">Departments</a>
         <a href="{% url 'classes:class_list' %}">Classes</a>
-        {% if user.is_authenticated %} <p><a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a></p>
+        <a href="{% url 'clubs:club_list' %}">Clubs</a> 
+        {% if user.is_authenticated %} 
+        <p>
+            <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a><br>
+            {{user.username}}
+        </p>
         {% else %} 
             <p><a href="{% url 'users:signup' %}">Sign Up</a></p> 
             <p><a href="{% url 'users:login' %}">Log In</a></p> 
