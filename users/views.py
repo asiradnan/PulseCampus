@@ -28,14 +28,14 @@ def login_view(request):
         messages.success(request, 'Logged in successfully!')   
         login(request, user)
         return redirect('homepage')
-    return render(request, 'login.html')
+    return render(request, 'users/login.html')
 
 def logout_view(request):
     logout(request)
     return redirect(request.GET.get('next', '/'))
 
 def signup(request):
-    return render(request,'signup.html')
+    return render(request,'users/signup.html')
 
 def _role_based_signup(request, form_class):
     if request.method == 'POST':
@@ -53,25 +53,25 @@ def _role_based_signup(request, form_class):
                     
                     if '@' in username and '.' in username.split('@')[1]:
                         messages.error(request, "Your username appears to be an email address. Please use a simple username.")
-                        return render(request,'role_based_signup.html',{'form':form})
+                        return render(request,'users/role_based_signup.html',{'form':form})
                     
                     try:
                         validate_password(password)
                     except ValidationError as e:
                         messages.error(request, e.messages[0])
-                        return render(request,'role_based_signup.html',{'form':form})
+                        return render(request,'users/role_based_signup.html',{'form':form})
                     
                     if password != confirm_password:
                         messages.error(request, "Passwords do not match!")
-                        return render(request,'role_based_signup.html',{'form':form})
+                        return render(request,'users/role_based_signup.html',{'form':form})
                     
                     if User.objects.filter(username=username).exists():
                         messages.error(request, "Username already exists!")
-                        return render(request,'role_based_signup.html',{'form':form})
+                        return render(request,'users/role_based_signup.html',{'form':form})
                     
                     if User.objects.filter(email=email).exists():
                         messages.error(request, "Email already exists!")
-                        return render(request,'role_based_signup.html',{'form':form})
+                        return render(request,'users/role_based_signup.html',{'form':form})
                     
                     email = email.lower().strip()
                     user = User.objects.create_user(
@@ -94,7 +94,7 @@ def _role_based_signup(request, form_class):
                 return render(request,'role_based_signup.html',{'form':form})
     else:
         form = form_class()
-    return render(request,'role_based_signup.html',{'form':form})   
+    return render(request,'users/role_based_signup.html',{'form':form})   
 
 def student_signup(request):
     return _role_based_signup(request, forms.StudentForm)    
