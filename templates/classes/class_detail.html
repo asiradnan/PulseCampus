@@ -1,13 +1,25 @@
 {% extends 'base.html' %}
 {% block title %}   {{class}} {% endblock %}
 {% block content %}
+{% if user.is_authenticated and user.principal %}
 <a href="{% url 'classes:class_update' class.pk %}">Edit Class</a>  
 <form method="post" action="{% url 'classes:class_delete' class.pk %}">
     {% csrf_token %}
 <button type="submit">Delete</button>
-
+{% endif %} 
 </form>
 <h1>{{class}}</h1>
 Room Number: {{ class.room_number}}
 Building Number: {{ class.building_number}}
+<br>
+Students:
+{% if class.student_set.all %}
+<ul>
+    {% for student in class.student_set.all %}
+    <li>{{student}}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No students are enrolled in this class.</p>
+{% endif %}
 {% endblock %}
