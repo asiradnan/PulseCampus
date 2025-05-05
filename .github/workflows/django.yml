@@ -41,7 +41,8 @@ jobs:
         key: ${{ secrets.AWS_SSH_KEY }}
         script: |
           cd /home/ubuntu/PulseCampus 
-          git pull origin main
+          git fetch origin
+          git reset --hard origin/main
           source awsenv/bin/activate
           pip install -r requirements.txt
           python manage.py migrate
