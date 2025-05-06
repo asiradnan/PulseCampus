@@ -2,14 +2,15 @@ from django.shortcuts import render
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DeleteView, DetailView, ListView
 from .models import Post, Comment
+from .forms import PostForm 
 
 class PostCreateView(CreateView):
     model = Post
-    fields = '__all__'
+    form_class = PostForm
 
 class PostUpdateView(UpdateView):
     model = Post
-    fields = '__all__'
+    form_class = PostForm
 
 class PostDetailView(DetailView):
     model = Post
