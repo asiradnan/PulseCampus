@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Community{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<a href="{% url 'community:post_create' %}">Create Post</a>
+{% endif %}
+{% if post_list %}
+    {% for post in post_list %}
+    <a href="{%url 'community:post_detail' pk=post.pk %}">{{ post }}</a><br>
+    {{ post.content }}
+    {% endfor %}
+{% else %}
+<p>There are no posts.</p>
+{% endif %}
+
+{% endblock %}
