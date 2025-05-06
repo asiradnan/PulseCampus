@@ -25,4 +25,5 @@ urlpatterns = [
     path('departments/',include('departments.urls')),
     path('classes/',include('classes.urls')),
     path('clubs/',include('clubs.urls')),
+    path('posts/',include('postsnqueries.urls')),
 ]
