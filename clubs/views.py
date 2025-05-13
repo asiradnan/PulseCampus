@@ -10,7 +10,6 @@ class ClubCreateView(TeacherOrPrincipalRequiredMixin, CreateView):
     form_class = ClubForm
 
     def form_valid(self, form):
-        print(self.request.user.teacher)
         form.instance.supervisor = self.request.user.teacher
         return super().form_valid(form)
 

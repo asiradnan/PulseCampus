@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block title %}Post{% endblock %}
 {% block content %}
+{% if user.is_authenticated and post.posted_by == user %} 
+<a href="{% url 'community:post_update' pk=post.pk %}">Edit</a>
+<a href="{% url 'community:post_delete' pk=post.pk %}">Delete</a>
+{% endif %}
 <h2>{{ post.title }}</h2>
 <p>{{ post.content }}</p>
 

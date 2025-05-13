@@ -8,6 +8,11 @@ class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
 
+    def form_valid(self, form):
+        form.instance.posted_by = self.request.user
+        print(form.instance)
+        return super().form_valid(form)
+
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm

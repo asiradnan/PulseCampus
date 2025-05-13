@@ -10,6 +10,9 @@
     {% for post in post_list %}
     <a href="{%url 'community:post_detail' pk=post.pk %}">{{ post }}</a><br>
     {{ post.content }}
+    {% if post.image %} 
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" width="200">
+    {% endif %}
     {% endfor %}
 {% else %}
 <p>There are no posts.</p>
