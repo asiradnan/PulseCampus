@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-
+from PulseCampus.validators import file_less_than_5mb
 class Post(models.Model):
     posted_by=models.ForeignKey(User,on_delete=models.CASCADE)
     title=models.CharField(max_length=300)
     content=models.TextField(max_length=10000)
-    image = models.ImageField(upload_to='images/',null=True,blank=True)
+    image = models.ImageField(upload_to='images/',null=True,blank=True, validators=[file_less_than_5mb])
     time = models.DateTimeField(auto_now_add=True, editable=False)
 
     def __str__(self):

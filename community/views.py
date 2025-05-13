@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import redirect
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DeleteView, DetailView, ListView
 from .models import Post, Comment
@@ -23,5 +23,7 @@ class PostDetailView(DetailView):
 class PostListView(ListView):
     model = Post
 
-class PostDeleteView(DeleteView):
-    model = Post
+def delete_post(request, pk):
+    post = Post.objects.get(pk=pk)
+    post.delete()
+    return redirect('community:post_list')
