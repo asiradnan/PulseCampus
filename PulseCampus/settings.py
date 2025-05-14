@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'clubs.apps.ClubsConfig',
     'community.apps.CommunityConfig',
+    'notice.apps.NoticeConfig',
 
     'storages',
     'django_cleanup.apps.CleanupConfig',
