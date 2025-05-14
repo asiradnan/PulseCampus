@@ -12,6 +12,15 @@
 {% if post.image %}
     <img src="{{ post.image.url }}" alt="{{ post.title }}" width="200">
 {% endif %}
+<p>Total votes: {{post.vote_set.all|length}}</p>
+<form action="{% url 'community:upvote' post.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Upvote</button>
+</form> 
+<form action="{% url 'community:downvote' post.pk %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Downvote</button>
+</form>
 {% if post.comments %}
     <h3>Comments</h3>
     {% for comment in post.comments.all %} 

@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DeleteView, DetailView, ListView
-from .models import Post, Comment
+from .models import Post, Comment, Vote
 from .forms import PostForm 
 from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
@@ -51,3 +51,20 @@ def delete_comment(request, pk):
         return redirect('community:post_detail', pk=comment.post.pk)
     messages.success(request, 'Comment deleted successfully.')
     return redirect('community:post_detail', pk=comment.post.pk)
+
+@login_required
+def upvote(request, pk):
+    post = Post.objects.get(pk=pk)
+    vote, flag = Vote.objects.get_or_create(post=post, user=request.user)
+    vote.upvote = True
+    vote.downvote = False
+    vote.save()
+    return redirect('community:post_detail', pk=pk)
+
+def downvote(request, pk):
+    post = Post.objects.get(pk=pk)
+    vote, flag = Vote.objects.get_or_create(post=post, user=request.user)
+    vote.upvote = False
+    vote.downvote = True
+    vote.save()
+    return redirect('community:post_detail', pk=pk)
