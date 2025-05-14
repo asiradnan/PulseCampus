@@ -3,7 +3,10 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DeleteView, DetailView, ListView
 from .models import Post, Comment
 from .forms import PostForm 
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 
+@method_decorator(ratelimit(key='ip', rate='30/d', method=['POST']), name='post')
 class PostCreateView(CreateView):
     model = Post
     form_class = PostForm
@@ -13,6 +16,7 @@ class PostCreateView(CreateView):
         print(form.instance)
         return super().form_valid(form)
 
+@method_decorator(ratelimit(key='ip', rate='30/d', method=['POST']), name='post')
 class PostUpdateView(UpdateView):
     model = Post
     form_class = PostForm

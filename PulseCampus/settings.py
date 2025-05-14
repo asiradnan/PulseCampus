@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'storages',
     'django_cleanup.apps.CleanupConfig',
+    
 
     'django.contrib.admin',
     'django.contrib.auth',

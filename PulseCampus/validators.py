@@ -21,7 +21,7 @@ def all_digits(value):
     if not value.isdigit():
         raise ValidationError("Must be all digits")
    
-def file_less_than_5mb(value):
+def file_less_than_2mb(value):
     filesize= value.size
-    if filesize > 5 * 1024 * 1024:
+    if filesize > 2 * 1024 * 1024:
         raise ValidationError("The maximum file size that can be uploaded is 5MB")
