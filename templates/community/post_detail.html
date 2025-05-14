@@ -1,14 +1,30 @@
 {% extends 'base.html' %}
 {% block title %}Post{% endblock %}
+
 {% block content %}
+
 {% if user.is_authenticated and post.posted_by == user %} 
-<a href="{% url 'community:post_update' pk=post.pk %}">Edit</a>
-<a href="{% url 'community:post_delete' pk=post.pk %}">Delete</a>
+    <a href="{% url 'community:post_update' pk=post.pk %}">Edit</a>
+    <a href="{% url 'community:post_delete' pk=post.pk %}">Delete</a>
 {% endif %}
 <h2>{{ post.title }}</h2>
 <p>{{ post.content }}</p>
 {% if post.image %}
-<img src="{{ post.image.url }}" alt="{{ post.title }}" width="200">
+    <img src="{{ post.image.url }}" alt="{{ post.title }}" width="200">
 {% endif %}
-
+{% if post.comments %}
+    <h3>Comments</h3>
+    {% for comment in post.comments.all %} 
+        <p>
+            {{comment.commented_by.first_name}} : {{comment}}
+        </p>
+    {% endfor %}
+{% endif %}
+{% if user.is_authenticated %}
+    <form action="{% url 'community:add_comment' post.pk %}" method="post">
+        {% csrf_token %}
+        <input name="content" type="text" required>
+        <button type="submit">Add Comment</button>
+    </form>
+{% endif %}
 {% endblock %}

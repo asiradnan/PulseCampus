@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PulseCampus.validators import file_less_than_2mb
+
+
 class Post(models.Model):
     posted_by=models.ForeignKey(User,on_delete=models.CASCADE)
     title=models.CharField(max_length=300)
@@ -20,3 +22,6 @@ class Comment(models.Model):
     commented_by = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=1000)
     time = models.DateTimeField(auto_now_add=True, editable=False)
+
+    def __str__(self):
+        return self.content

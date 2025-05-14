@@ -31,3 +31,10 @@ def delete_post(request, pk):
     post = Post.objects.get(pk=pk)
     post.delete()
     return redirect('community:post_list')
+
+def add_comment(request, pk):
+    post = Post.objects.get(pk=pk)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        Comment.objects.create(post=post, commented_by=request.user, content=content)
+    return redirect('community:post_detail', pk=pk)
