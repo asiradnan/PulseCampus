@@ -5,6 +5,8 @@ from .models import Post, Comment
 from .forms import PostForm 
 from django_ratelimit.decorators import ratelimit
 from django.utils.decorators import method_decorator
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required   
 
 @method_decorator(ratelimit(key='ip', rate='30/d', method=['POST']), name='post')
 class PostCreateView(CreateView):
@@ -38,3 +40,14 @@ def add_comment(request, pk):
         content = request.POST.get('content')
         Comment.objects.create(post=post, commented_by=request.user, content=content)
     return redirect('community:post_detail', pk=pk)
+
+@login_required
+def delete_comment(request, pk):
+    comment = Comment.objects.get(pk=pk)
+    if comment.commented_by == request.user:
+        comment.delete()
+    else:
+        messages.error(request, 'You do not have permission to delete this comment.')
+        return redirect('community:post_detail', pk=comment.post.pk)
+    messages.success(request, 'Comment deleted successfully.')
+    return redirect('community:post_detail', pk=comment.post.pk)

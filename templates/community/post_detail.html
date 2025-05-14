@@ -17,6 +17,9 @@
     {% for comment in post.comments.all %} 
         <p>
             {{comment.commented_by.first_name}} : {{comment}}
+            {% if user.is_authenticated and comment.commented_by == user %}
+            <a href="{% url 'community:delete_comment' comment.pk  %}">Delete</a>
+            {% endif %}
         </p>
     {% endfor %}
 {% endif %}
