@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Notices{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<a href="{% url 'notice:notice_create' %}">Publish Notice</a>
+{% endif %}
+{% if notice_list %}
+    {% for notice in notice_list %}
+        <a href="{%url 'notice:notice_detail' pk=notice.pk %}">{{ notice }}</a><br>
+        {{ notice.content }}
+        {% if notice.pdf_file %}
+        <a href="{{ notice.pdf_file.url }}" target="_blank">Download Notice</a>
+        {% endif %}
+    {% endfor %}
+{% else %}
+<p>There are no notices.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}{{notice}}{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated and notice.posted_by == user %} 
+<a href="{% url 'notice:notice_update' pk=notice.pk %}">Edit</a>
+<a href="{% url 'notice:notice_delete' pk=notice.pk %}">Delete</a>
+{% endif %}
+<h2>{{ notice.title }}</h2>
+<p>{{ notice.content }}</p>
+{% if notice.pdf_file %}
+<a href="{{ notice.pdf_file.url }}" target="_blank">Download Notice</a>
+{% endif %}
+{% endblock %}
