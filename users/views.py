@@ -104,6 +104,4 @@ def teacher_signup(request):
     return _role_based_signup(request, forms.TeacherForm)   
     
 def principal_signup(request):
-    from .tasks import test
-    test.delay('Hello, Celery!')
     return _role_based_signup(request, forms.PrincipalForm)     

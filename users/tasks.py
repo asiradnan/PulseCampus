@@ -2,11 +2,11 @@ from celery import shared_task
 from django.core.mail import send_mail
 
 @shared_task
-def test(arg):
+def send_confirmation_email(email_address):
     send_mail(
-        'Test Email',
-        'This is a test email sent from Celery.',
-        'mail-pulsecampus@asiradnan.com',
-        ['asir.adnan@g.bracu.ac.bd'],
-        fail_silently=False,
-    )
+            'Welcome to PulseCampus',
+            'Thank you for registering on PulseCampus!',
+            'verify-pulsecampus@asiradnan.com',
+            [email_address],
+            fail_silently=False,
+        )
