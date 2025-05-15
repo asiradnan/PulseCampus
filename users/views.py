@@ -91,7 +91,7 @@ def _role_based_signup(request, form_class):
                     
             except Exception as e:
                 messages.error(request, f"An error occurred during registration: {str(e)}")
-                return render(request,'role_based_signup.html',{'form':form})
+                return render(request,'users/role_based_signup.html',{'form':form})
     else:
         form = form_class()
     return render(request,'users/role_based_signup.html',{'form':form})   

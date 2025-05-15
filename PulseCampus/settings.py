@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 
     'storages',
     'django_cleanup.apps.CleanupConfig',
+    'django_ses',
     
 
     'django.contrib.admin',
@@ -162,3 +163,8 @@ STORAGES = {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_SES_REGION_NAME = 'ap-south-1'
+AWS_SES_REGION_ENDPOINT = 'email.ap-south-1.amazonaws.com'
+
