@@ -151,18 +151,18 @@ def reset_password(request, token):
                 validate_password(password)
             except ValidationError as e:
                 messages.error(request, e.messages[0])
-                return render(request, 'users/reset_password.html', {'token': token})
+                return render(request, 'users/reset_password.html')
         
             if password != confirm_password:
                 messages.error(request, "Passwords do not match!")
-                return render(request, 'users/reset_password.html', {'token': token})
+                return render(request, 'users/reset_password.html')
             
             user.set_password(password)
             user.save()
             messages.success(request, "Password reset successfully!")
             return redirect('users:login')
         else: 
-            return render(request, 'users/reset_password.html', {'token': token})
+            return render(request, 'users/reset_password.html')
         
     except signing.SignatureExpired:
         messages.error(request, "Token has expired.")
