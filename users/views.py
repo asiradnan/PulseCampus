@@ -6,22 +6,33 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 from . import forms
 from django.db import transaction
+from django.core import signing 
+
 
 def login_view(request):
     if request.user.is_authenticated:
         return redirect('homepage')
     if request.method == 'POST':
+        is_active = True
         username_or_email = request.POST.get('username or email')
         password = request.POST.get('password')
         if '@' in username_or_email:
             try:
                 email = username_or_email.lower().strip()
                 user = User.objects.get(email=email)
+                if user:
+                    is_active = user.is_active
                 user = authenticate(request, username=user.username, password=password)
             except User.DoesNotExist:
                 user = None
         else:
+            user = User.objects.get(username=username_or_email)
+            if user:
+                is_active = user.is_active
             user = authenticate(request, username=username_or_email, password=password)
+        if not is_active:
+            messages.error(request, 'Your account is not active. Please confirm your email.')   
+            return redirect('users:login')
         if user is None:
             messages.error(request, 'Invalid credentials.')
             return redirect('users:login')
@@ -104,4 +115,15 @@ def teacher_signup(request):
     return _role_based_signup(request, forms.TeacherForm)   
     
 def principal_signup(request):
-    return _role_based_signup(request, forms.PrincipalForm)     
+    return _role_based_signup(request, forms.PrincipalForm)   
+
+def verify_email(request, token):
+    try:
+        email = signing.loads(token, max_age=60*60*24)
+        user = User.objects.get(email=email)
+        user.is_active = True
+        user.save()
+        messages.success(request, "Email verified successfully!")
+    except signing.BadSignature:
+        messages.error(request, "Invalid token.")
+    return redirect('users:login')

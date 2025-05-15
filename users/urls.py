@@ -10,5 +10,6 @@ urlpatterns = [
     path('signup/student/',views.student_signup,name='student_signup'),
     path('signup/teacher/',views.teacher_signup,name='teacher_signup'),
     path('signup/principal/',views.principal_signup,name='principal_signup'),
+    path('verify_email/<str:token>/',views.verify_email,name='verify_email'),
     
 ]
