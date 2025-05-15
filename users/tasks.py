@@ -10,4 +10,13 @@ def send_confirmation_email(email_address, token):
             [email_address],
             fail_silently=False,
         )
-    print('email_sent: ', email_sent)
+    
+@shared_task
+def send_reset_email(email_address, token):
+    email_sent = send_mail(
+            'Password Reset',
+            'Click the link below to reset your password: http://127.0.0.1:8000/users/reset_password/{}'.format(token),
+            'verify-pulsecampus@asiradnan.com',
+            [email_address],
+            fail_silently=False
+    )

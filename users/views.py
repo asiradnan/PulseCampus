@@ -7,7 +7,7 @@ from django.contrib import messages
 from . import forms
 from django.db import transaction
 from django.core import signing 
-
+from .tasks import send_reset_email
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -127,3 +127,47 @@ def verify_email(request, token):
     except signing.BadSignature:
         messages.error(request, "Invalid token.")
     return redirect('users:login')
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = signing.dumps(email)
+            send_reset_email.delay(email, token)
+            messages.success(request, "Password reset email sent successfully!")
+        except User.DoesNotExist:
+            messages.error(request, "User with this email does not exist.")
+    return render(request, 'users/forgot_password.html')
+
+def reset_password(request, token):
+    try:
+        email = signing.loads(token, max_age=60*60)
+        user = User.objects.get(email=email)
+        if request.method == 'POST':
+            password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            try:
+                validate_password(password)
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
+                return render(request, 'users/reset_password.html', {'token': token})
+        
+            if password != confirm_password:
+                messages.error(request, "Passwords do not match!")
+                return render(request, 'users/reset_password.html', {'token': token})
+            
+            user.set_password(password)
+            user.save()
+            messages.success(request, "Password reset successfully!")
+            return redirect('users:login')
+        else: 
+            return render(request, 'users/reset_password.html', {'token': token})
+        
+    except signing.SignatureExpired:
+        messages.error(request, "Token has expired.")
+        return redirect('users:forgot_password')
+    except signing.BadSignature:
+        messages.error(request, "Invalid token.")
+        return redirect('users:forgot_password')
+    
