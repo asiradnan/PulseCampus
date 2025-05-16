@@ -13,5 +13,6 @@ urlpatterns = [
     path('verify_email/<str:token>/',views.verify_email,name='verify_email'),
     path('forgot_password/',views.forgot_password,name='forgot_password'),
     path('reset_password/<str:token>/',views.reset_password,name='reset_password'),
+    path('profile/',views.profile,name='profile'),
     
 ]

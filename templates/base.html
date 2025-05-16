@@ -10,6 +10,7 @@
 
 <body>
     <nav>
+        <a href="{% url 'homepage' %}">Home</a>
         <a href="{% url 'departments:department_list' %}">Departments</a>
         <a href="{% url 'classes:class_list' %}">Classes</a>
         <a href="{% url 'clubs:club_list' %}">Clubs</a> 
@@ -17,8 +18,9 @@
         <a href="{% url 'notice:notice_list' %}">Notices</a>
         {% if user.is_authenticated %} 
         <p>
-            <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a><br>
-            {{user.username}}
+            <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a>
+            <a href="{% url 'users:profile' %}">Profile</a>
+            
         </p>
         {% else %} 
             <p><a href="{% url 'users:signup' %}">Sign Up</a></p> 

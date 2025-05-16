@@ -1,5 +1,6 @@
 from django import forms
 from . import models
+from django.contrib.auth.models import User
 
 class StudentForm(forms.ModelForm):
     first_name = forms.CharField(min_length=1, max_length=250)
@@ -42,3 +43,8 @@ class PrincipalForm(forms.ModelForm):
             'joining_date': forms.widgets.DateInput(attrs={'type': 'date'})
         }
     field_order = ['first_name','last_name', 'username', 'email','password', 'confirm_password', 'name', 'designation', 'joining_date', 'address', 'room_number', 'building_number']  
+
+# class UserForm(forms.ModelForm):
+#     class Meta:
+#         model = User
+#         fields = ['first_name', 'last_name','username', 'email']

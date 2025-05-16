@@ -8,6 +8,7 @@ from . import forms
 from django.db import transaction
 from django.core import signing 
 from .tasks import send_reset_email
+from django.contrib.auth.decorators import login_required
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -170,4 +171,56 @@ def reset_password(request, token):
     except signing.BadSignature:
         messages.error(request, "Invalid token.")
         return redirect('users:forgot_password')
+
+@login_required 
+def profile(request):
+    if not request.user.is_authenticated:
+        return redirect('users:login')
+    if hasattr(request.user, 'student'):
+        form_class = forms.StudentForm
+        profile = request.user.student
+    elif hasattr(request.user, 'teacher'):
+        form_class = forms.TeacherForm
+        profile = request.user.teacher
+    elif hasattr(request.user, 'principal'):
+        form_class = forms.PrincipalForm
+        profile = request.user.principal
+    if request.method == 'POST':
+        form = form_class(request.POST, request.FILES, instance=profile)
+        form.fields.pop('password')
+        form.fields.pop('confirm_password') 
+        if form.is_valid():
+            first_name = form.cleaned_data['first_name']
+            last_name = form.cleaned_data['last_name']
+            username = form.cleaned_data['username']
+            email = form.cleaned_data['email']
+            user = request.user
+            try:
+                with transaction.atomic():
+                    user.first_name = first_name
+                    user.last_name = last_name
+                    user.username = username
+                    user.email = email
+                    user.save()
+                    form.save()
+                    messages.success(request, "Profile updated successfully!")
+                    return redirect('users:profile')
+            except Exception as e:
+                messages.error(request, "An error occurred while updating the profile.")
+                print(e)
+                return render(request, 'users/profile.html', {'form': form})
+    else:
+        user_data = {
+            'username':request.user.username,
+            'email' : request.user.email,
+            'first_name' : request.user.first_name,
+            'last_name' : request.user.last_name
+        }
+        
+        form = form_class(instance=profile, initial=user_data)
+        form.fields.pop('password')
+        form.fields.pop('confirm_password') 
+        # print(form)
+        # print(form_class)
+    return render(request, 'users/profile.html', {'form': form})
     
