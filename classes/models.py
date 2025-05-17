@@ -3,9 +3,9 @@ from PulseCampus import validators
 from django.urls import reverse
 
 class Class(models.Model):
-    class_code=models.CharField(max_length=4,unique=True)
-    room_number=models.CharField(max_length=4,validators=[validators.all_digits])
-    building_number=models.CharField(max_length=4,validators=[validators.all_digits])
+    class_code=models.CharField(max_length=2,unique=True)
+    room_number=models.CharField(max_length=3,validators=[validators.all_digits])
+    building_number=models.CharField(max_length=2,validators=[validators.all_digits])
 
     def __str__(self):
         return self.class_code
