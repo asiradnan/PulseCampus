@@ -4,12 +4,17 @@ from users.models import User, Principal
 class PrincipalModelTestCase(TestCase):
     def setUp(self):
         self.principal = Principal.objects.create(
-            user=User.objects.create_user(username='principal', password='password'),
-            name='John Doe',
-            email='john@example.com',
-            phone_number='1234567890',
+            user=User.objects.create_user(
+                username='principal',
+                password='password',
+                first_name = 'John',
+                last_name = 'Doe'
+            ),
             address='123 Main St',
-            date_of_birth='1990-01-01'
+            room_number='2',
+            building_number = '3',
+            joining_date = '2025-02-03',
+            designation = 'Principal'
         )
 
     def test_stringify(self):
