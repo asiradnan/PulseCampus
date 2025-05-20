@@ -103,3 +103,142 @@ class UsersViewTestCase(TestCase):
         self.assertRedirects(response, expected_url=reverse('users:login'), status_code=302, target_status_code=200)
         self.assertEqual(User.objects.count(),2)
         self.assertEqual(Student.objects.count(),1)
+
+    def test_email_as_username(self):
+        temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
+        self.assertEqual(Class.objects.count(),1)
+        form_data = {
+            'first_name' : 'test',
+            'last_name' : 'user',
+            'username' : 'student@test.com',
+            'email' : 'student@test.com',
+            'password': 'p1q2w3e4r',
+            'confirm_password': 'p1q2w3e4r',
+            'student_class' : temp_class.pk,
+            'student_id':'123456',
+            'address':  'test address'
+        }
+        count = User.objects.count()
+        response = self.client.post(reverse('users:student_signup'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/role_based_signup.html')
+        self.assertEqual(User.objects.count(),count)
+
+    def test_invalid_passwrd_confirmation(self):
+        temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
+        self.assertEqual(Class.objects.count(),1)
+        form_data = {
+            'first_name' : 'test',
+            'last_name' : 'user',
+            'username' : 'student',
+            'email' : 'student@test.com',
+            'password': '1234',
+            'confirm_password': '1234',
+            'student_class' : temp_class.pk,
+            'student_id':'123456',
+            'address':  'test address'
+        }
+        count = User.objects.count()
+        response = self.client.post(reverse('users:student_signup'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/role_based_signup.html')
+        self.assertEqual(User.objects.count(),count)
+
+    def test_unmatched_passwords(self):
+        temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
+        self.assertEqual(Class.objects.count(),1)
+        form_data = {
+            'first_name' : 'test',
+            'last_name' : 'user',
+            'username' : 'student',
+            'email' : 'student@test.com',
+            'password': 'p1q2w3e4r',
+            'confirm_password': 'p1q2w3e4rrrrrrrrr',
+            'student_class' : temp_class.pk,
+            'student_id':'123456',
+            'address':  'test address'
+        }
+        count = User.objects.count()
+        response = self.client.post(reverse('users:student_signup'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/role_based_signup.html')
+        self.assertEqual(User.objects.count(),count)
+
+    def test_taken_username(self):
+        temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
+        self.assertEqual(Class.objects.count(),1)
+        form_data = {
+            'first_name' : 'test',
+            'last_name' : 'user',
+            'username' : 'testuser',
+            'email' : 'student@test.com',
+            'password': 'p1q2w3e4r',
+            'confirm_password': 'p1q2w3e4r',
+            'student_class' : temp_class.pk,
+            'student_id':'123456',
+            'address':  'test address'
+        }
+        count = User.objects.count()
+        response = self.client.post(reverse('users:student_signup'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/role_based_signup.html')
+        self.assertEqual(User.objects.count(),count)
+
+    def test_taken_email(self):
+        temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
+        self.assertEqual(Class.objects.count(),1)
+        form_data = {
+            'first_name' : 'test',
+            'last_name' : 'user',
+            'username' : 'student',
+            'email' : 'test@test.com',
+            'password': 'p1q2w3e4r',
+            'confirm_password': 'p1q2w3e4r',
+            'student_class' : temp_class.pk,
+            'student_id':'123456',
+            'address':  'test address'
+        }
+        count = User.objects.count()
+        response = self.client.post(reverse('users:student_signup'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/role_based_signup.html')
+        self.assertEqual(User.objects.count(),count)
+
+    def test_profile(self):
+        temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
+        self.assertEqual(Class.objects.count(),1)
+        form_data = {
+            'first_name' : 'test',
+            'last_name' : 'user',
+            'username' : 'student',
+            'email' : 'student@test.com',
+            'password': 'p1q2w3e4r',
+            'confirm_password': 'p1q2w3e4r',
+            'student_class' : temp_class.pk,
+            'student_id':'123457',
+            'address':  'test address'
+        }
+        response = self.client.post(reverse('users:student_signup'), data=form_data)
+        user = User.objects.get(username='student')
+        user.is_active = True
+        user.save()
+        logged_in = self.client.login(username='student', password='p1q2w3e4r')
+        self.assertTrue(logged_in)
+        response = self.client.get(reverse('users:profile'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/profile.html')
+
+        form_data['last_name'] = 'updated'
+        response = self.client.post(reverse('users:profile'), data=form_data)
+        self.assertRedirects(response, reverse('users:profile'))
+        self.assertEqual(User.objects.get(username='student').last_name, 'updated')
+
+    def test_forgot_password(self):
+        form_data = {
+            'email' : 'test@test.com'
+        }
+        response = self.client.post(reverse('users:forgot_password'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/forgot_password.html')
+
+    
