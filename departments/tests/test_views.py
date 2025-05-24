@@ -1,11 +1,12 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from .models import Department
+from departments.models import Department
 from users.models import Principal
 from django.urls import  reverse
 
-class DepartmentTest(TestCase):
-    def setUp(self):
+class DepartmentViewTestCase(TestCase):
+    @classmethod
+    def setUpTestData(self):
         self.principal_user = User.objects.create_user(username='testuser', password='testpassword')
         self.principal = Principal.objects.create(user=self.principal_user, designation='Principal',joining_date='2023-01-01', address='123 Main St', room_number='101', building_number='202')
         self.other_user = User.objects.create_user(username='otheruser', password='testpassword')
