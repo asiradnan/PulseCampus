@@ -1,10 +1,17 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from users.models import User, Student 
 from classes.models import Class
+from unittest.mock import patch
+from django.core import mail
 
+@override_settings(
+        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+        CELERY_TASK_ALWAYS_EAGER=True  
+    )
 class UsersViewTestCase(TestCase):
-    def setUp(self):
+    @classmethod
+    def setUpTestData(self):
         self.user = User.objects.create_user(username='testuser', password = 'pass1234')
         self.user.email="test@test.com"
         self.user.save()
@@ -85,6 +92,7 @@ class UsersViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/role_based_signup.html')
 
+    
     def test_student_signup(self):
         temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
         self.assertEqual(Class.objects.count(),1)
@@ -103,6 +111,16 @@ class UsersViewTestCase(TestCase):
         self.assertRedirects(response, expected_url=reverse('users:login'), status_code=302, target_status_code=200)
         self.assertEqual(User.objects.count(),2)
         self.assertEqual(Student.objects.count(),1)
+        self.assertEqual(len(mail.outbox), 1)   
+        email = mail.outbox[0]
+        self.assertEqual(email.subject, 'Welcome to PulseCampus')
+        token = email.body.split('verify_email/')[1].split(' Note that')[0].strip()
+        self.assertFalse(User.objects.get(email='student@test.com').is_active)
+        response = self.client.get(reverse('users:verify_email', args=[token+'bad_token']))
+        self.assertFalse(User.objects.get(email='student@test.com').is_active)
+        response = self.client.get(reverse('users:verify_email', args=[token]))
+        self.assertTrue(User.objects.get(email='student@test.com').is_active)
+
 
     def test_email_as_username(self):
         temp_class = Class.objects.create(class_code = '1A', building_number = '1', room_number = '1')
@@ -240,5 +258,36 @@ class UsersViewTestCase(TestCase):
         response = self.client.post(reverse('users:forgot_password'), data=form_data)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/forgot_password.html')
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].subject, 'Password Reset')
+        token = mail.outbox[0].body.split('reset_password/')[1].strip()
+        response = self.client.get(reverse('users:reset_password', args=[token]))
+        self.assertTemplateUsed(response, 'users/reset_password.html')
+        form_data = {
+            'password': 'newpassword',
+            'confirm_password': 'newpassword'
+        }
+        response = self.client.post(reverse('users:reset_password', args=[token]), data=form_data)
+        self.assertTemplateUsed(response, 'users/reset_password.html')
+        form_data = {
+            'password': 'p11q2w3e4r',
+            'confirm_password': 'p11q2w3e4rrrrr'
+        }
+        response = self.client.post(reverse('users:reset_password', args=[token]), data=form_data)
+        self.assertTemplateUsed(response, 'users/reset_password.html')
+        form_data = {
+            'password': 'p11q2w3e4r',
+            'confirm_password': 'p11q2w3e4r'
+        }
+        response = self.client.post(reverse('users:reset_password', args=[token]), data=form_data)
+        self.assertRedirects(response, reverse('users:login'))
 
-    
+    def test_nonexistent_email_forgot_password(self):
+        form_data = {
+            'email' : 'nonexistent@test.com'
+        }
+        response = self.client.post(reverse('users:forgot_password'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'users/forgot_password.html')
+
+
