@@ -102,3 +102,15 @@ class ClassViewTestCase(TestCase):
         self.assertEqual(response.status_code,302)
         self.assertEqual(Class.objects.count(),1)
         self.assertEqual(Class.objects.get(pk=self.default_class.pk).class_code,'2')
+
+    def test_class_delete_view(self):
+        self.client.login(username='principal', password='password')
+        response = self.client.post(reverse('classes:class_delete',args=[self.default_class.pk]))
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(Class.objects.count(),0)
+
+    def test_class_delete_otherthan_principal(self):
+        self.client.login(username='student', password='password')
+        response = self.client.post(reverse('classes:class_delete',args=[self.default_class.pk]))
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(Class.objects.count(),1)
