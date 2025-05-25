@@ -11,3 +11,7 @@ class NoticeModelTestCase(TestCase):
         notice = Notice(posted_by=self.user, title="Test Notice", content="Test Content")
         with self.assertRaises(ValidationError):
             notice.clean()
+
+    def test_notice_str_representation(self):
+        notice = Notice(posted_by=self.user, title="Test Notice", content="Test Content")
+        self.assertEqual(str(notice), "Test Notice")

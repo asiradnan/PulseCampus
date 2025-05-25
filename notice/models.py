@@ -12,8 +12,9 @@ class Notice(models.Model):
     date=models.DateField(auto_now_add=True, editable=False)
 
     def clean(self):
-        if not hasattr(self.posted_by, 'teacher') and not hasattr(self.posted_by, 'principal'):
-            raise ValidationError("Only teachers and principals can post notices.")
+        if self.posted_by_id:
+            if not hasattr(self.posted_by, 'teacher') and not hasattr(self.posted_by, 'principal'):
+                raise ValidationError("Only teachers and principals can post notices.")
 
     def __str__(self):
         return self.title
