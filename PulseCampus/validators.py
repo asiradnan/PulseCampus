@@ -13,15 +13,15 @@ def no_future_date(value):
     if value > date.today():
         raise ValidationError('Date cannot be in the future.')
     
-def contact_validator(x):
-    if not x.isdigit() or len(x)<11:
-        raise ValidationError("Enter a valid Contact Number")
+# def contact_validator(x):
+#     if not x.isdigit() or len(x)<11:
+#         raise ValidationError("Enter a valid Contact Number")
     
 def all_digits(value):
     if not value.isdigit():
         raise ValidationError("Must be all digits")
    
 def file_less_than_2mb(value):
-    filesize= value.size
-    if filesize > 2 * 1024 * 1024:
-        raise ValidationError("The maximum file size that can be uploaded is 5MB")
+    limit = 2 * 1024 * 1024  
+    if value.size > limit:
+        raise ValidationError("The maximum file size that can be uploaded is 2MB")

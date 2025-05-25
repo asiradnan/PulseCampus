@@ -3,12 +3,13 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
+from PulseCampus.validators import file_less_than_2mb
 
 class Notice(models.Model):
     posted_by=models.ForeignKey(User,on_delete=models.CASCADE)
     title=models.CharField(max_length=200)
     content=models.TextField(max_length=10000)
-    pdf_file = models.FileField(upload_to='notices/', null=True, blank=True, validators=[FileExtensionValidator(['pdf'])])
+    pdf_file = models.FileField(upload_to='notices/', null=True, blank=True, validators=[FileExtensionValidator(['pdf']), file_less_than_2mb])
     date=models.DateField(auto_now_add=True, editable=False)
 
     def clean(self):
