@@ -1,3 +1,4 @@
+from pathlib import Path
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from notice.models import Notice, User
@@ -8,6 +9,10 @@ from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
 
+@override_settings(
+        DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage',
+        MEDIA_ROOT=Path(__file__).resolve().parent / 'test_media'
+    )
 class NoticeViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):  
@@ -36,10 +41,7 @@ class NoticeViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Notice.objects.count(), 0)
     
-    @override_settings(
-        DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage',
-        MEDIA_ROOT=os.path.join(settings.BASE_DIR, 'test_media')
-    )
+    
     def test_notice_with_static_pdf(self):
         test_pdf_path = os.path.join(settings.BASE_DIR, 'notice', 'tests', 'test_files', 'sample.pdf')
         
