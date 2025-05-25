@@ -36,7 +36,10 @@ class NoticeViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Notice.objects.count(), 0)
     
-    @override_settings(DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage')
+    @override_settings(
+        DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage',
+        MEDIA_ROOT=os.path.join(settings.BASE_DIR, 'test_media')
+    )
     def test_notice_with_static_pdf(self):
         test_pdf_path = os.path.join(settings.BASE_DIR, 'notice', 'tests', 'test_files', 'sample.pdf')
         
