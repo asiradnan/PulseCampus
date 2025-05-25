@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 from notice.models import Notice, User
 from departments.models import Department
@@ -36,6 +36,7 @@ class NoticeViewTestCase(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Notice.objects.count(), 0)
     
+    @override_settings(DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage')
     def test_notice_with_static_pdf(self):
         test_pdf_path = os.path.join(settings.BASE_DIR, 'notice', 'tests', 'test_files', 'sample.pdf')
         
