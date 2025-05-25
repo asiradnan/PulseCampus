@@ -16,6 +16,9 @@ class Student(models.Model):
     def make_captain(self):
         self.is_captain = True
         self.save()
+    def remove_captain(self):
+        self.is_captain = False
+        self.save()
 
 class Teacher(models.Model):
     user=models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
