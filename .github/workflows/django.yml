@@ -37,8 +37,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
+      env:
+          DJANGO_SETTINGS_MODULE: PulseCampus.settings_test
       run: |
-        DJANGO_SETTINGS_MODULE=PulseCampus.settings_test python manage.py test
+          python manage.py test
   deploy:
     needs: build  
     runs-on: ubuntu-latest
