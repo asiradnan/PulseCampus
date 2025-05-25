@@ -9,10 +9,7 @@ from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError
 
-@override_settings(
-        DEFAULT_FILE_STORAGE='django.core.files.storage.FileSystemStorage',
-        MEDIA_ROOT=Path(__file__).resolve().parent / 'test_media'
-    )
+
 class NoticeViewTestCase(TestCase):
     @classmethod
     def setUpTestData(cls):  
