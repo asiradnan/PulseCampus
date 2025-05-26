@@ -6,6 +6,7 @@ from PulseCampus.mixins import PrincipalRequiredMixin
 from django.contrib.auth.decorators import login_required
 from PulseCampus.mixins import is_principal
 from django.contrib import messages
+from users.models import Student
 
 class CreateClassView(PrincipalRequiredMixin,CreateView):
     model = models.Class
@@ -30,3 +31,12 @@ def class_delete(request, pk):
         class_obj = models.Class.objects.get(pk=pk)
         class_obj.delete()
         return redirect('classes:class_list')
+    
+def toggle_captain(request, pk):
+    if request.method == 'POST':
+        student_id = request.POST.get('student_id')
+        print(student_id)
+        student = Student.objects.get(student_id=student_id)
+        student.is_captain = not student.is_captain
+        student.save()
+    return redirect('classes:class_detail', pk=pk)

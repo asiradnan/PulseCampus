@@ -114,3 +114,12 @@ class ClassViewTestCase(TestCase):
         response = self.client.post(reverse('classes:class_delete',args=[self.default_class.pk]))
         self.assertEqual(response.status_code,302)
         self.assertEqual(Class.objects.count(),1)
+
+    def test_toggle_captain(self):
+        self.client.login(username='principal', password='password')
+        response = self.client.post(reverse('classes:toggle_captain',args=[self.default_class.pk]),data={'student_id':self.student.student_id})
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(Student.objects.get(pk=self.student.pk).is_captain,True)
+        response = self.client.post(reverse('classes:toggle_captain',args=[self.default_class.pk]),data={'student_id':self.student.student_id})
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(Student.objects.get(pk=self.student.pk).is_captain,False)

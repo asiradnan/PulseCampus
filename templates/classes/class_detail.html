@@ -16,7 +16,14 @@ Students:
 {% if class.student_set.all %}
 <ul>
     {% for student in class.student_set.all %}
-    <li>{{student}}</li>
+    <li>{{student}}
+        {% if student.is_captain %} - Captain {% endif %} <br>
+        <form method="post" action = "{% url 'classes:toggle_captain' pk=class.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="student_id" value="{{student.student_id}}">
+            <button type="submit">Toggle Captain</button>
+        </form> 
+    </li>
     {% endfor %}
 </ul>
 {% else %}
