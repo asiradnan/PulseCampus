@@ -27,7 +27,7 @@ jobs:
           --health-retries 5
       
       postgres:
-        image: postgres:13
+        image: postgres:17
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -54,9 +54,8 @@ jobs:
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        DJANGO_SETTINGS_MODULE: PulseCampus.settings_test
       run: |
-          python manage.py test --noinput
+          python manage.py test --noinput --settings=PulseCampus.settings_test
   deploy:
     needs: build  
     runs-on: ubuntu-latest
