@@ -61,6 +61,7 @@ def upvote(request, pk):
     vote.save()
     return redirect('community:post_detail', pk=pk)
 
+@login_required
 def downvote(request, pk):
     post = Post.objects.get(pk=pk)
     vote, flag = Vote.objects.get_or_create(post=post, user=request.user)
