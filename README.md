@@ -1,6 +1,6 @@
 # PulseCampus
 
-## PulseCampus is a full-featured, modular web portal designed for colleges to manage departments, student clubs, announcements, and forums.
+## PulseCampus is a modern web app designed for colleges to manage departments, student clubs, announcements, and forums.
 
 
 
