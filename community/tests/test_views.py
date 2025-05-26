@@ -45,7 +45,7 @@ class CommunityViewsTestCase(TestCase):
         self.assertEqual(post.comments.first().commented_by, response.wsgi_request.user)
         self.client.logout()
         self.client.login(username='testuser', password='testpassword')
-        response = self.client.post(reverse('community:delete_comment', args=[Post.objects.first().pk]))
+        response = self.client.post(reverse('community:delete_comment', args=[post.comments.first().pk]))
         self.assertEqual(response.status_code, 302)
         self.assertEqual(post.comments.count(), 1)
 
