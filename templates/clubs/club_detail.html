@@ -11,4 +11,21 @@
 {% endif %} 
 <p>Established On: {{object.established}}</p>
 
+<p>Supervisor: {{object.supervisor}}</p>
+
+<form method="post" action="{% url 'clubs:club_membership' pk=object.pk %}">
+    {% csrf_token %}
+    <input type="number" name="student_id" placeholder="Student ID">
+    <select name="position">
+    {% for value, label in positions %}
+    <option value="{{value}}">{{label}}</option>
+    {% endfor %}
+    </select>
+    <button type="submit">Add Member</button>
+</form>
+
+{% for member in members %}
+<p>{{member.student.user.first_name}} {{member.student.user.last_name}} - {{member.position}}</p>
+{% endfor %}
+
 {% endblock %}

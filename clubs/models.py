@@ -29,3 +29,6 @@ class Membership(models.Model):
     student = models.ForeignKey('users.Student', on_delete=models.CASCADE)
     club = models.ForeignKey(Club, on_delete=models.CASCADE)
     position = models.CharField(max_length=20, choices=POSITION_CHOICES)
+
+    def __str__(self):
+        return f"{self.student.user.first_name} {self.student.user.last_name} - {self.position} - {self.club.club_name}"
