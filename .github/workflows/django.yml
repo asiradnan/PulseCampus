@@ -45,7 +45,7 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DJANGO_SETTINGS_MODULE: PulseCampus.settings_test
       run: |
-          python manage.py test
+          python manage.py test --noinput
   deploy:
     needs: build  
     runs-on: ubuntu-latest
