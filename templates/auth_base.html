@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %} Sign Up {% endblock %}
+
+{% block content %}
+
+<section id="signup-section"
+    class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[600px] lg:min-h-[700px]">
+    <!-- Left static content -->
+    <div id="signup-left-static"
+        class="w-full lg:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-blue-600 to-blue-400 px-6 sm:px-10 py-8 sm:py-14 lg:py-0 relative order-2 lg:order-1">
+        <!-- Logo/Brand - Hidden on mobile, shown on larger screens -->
+        <div class="absolute top-4 sm:top-6 left-4 sm:left-8 flex gap-2 items-center hidden sm:flex">
+            <i class="fa-solid fa-graduation-cap text-white text-xl sm:text-2xl"></i>
+            <span class="text-white font-bold text-base sm:text-lg tracking-wide">PulseCampus</span>
+        </div>
+
+        <div class="flex flex-col items-center mt-4 sm:mt-10 lg:mt-0 text-center">
+            <!-- Mobile-optimized heading -->
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
+                <span class="block sm:hidden">Join PulseCampus</span>
+                <span class="hidden sm:block">Shape Your Campus Journey</span>
+            </h2>
+
+            <!-- Mobile-optimized description -->
+            <p
+                class="text-white/90 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-xs sm:max-w-md text-center leading-relaxed">
+                <span class="block sm:hidden">Your all-in-one platform for campus life - clubs, forums, and more.</span>
+                <span class="hidden sm:block">Join a thriving digital campus. Whether you're a student, teacher, or
+                    principal, PulseCampus is your all-in-one platform for announcements, clubs, forums, and department
+                    management.</span>
+            </p>
+
+            <!-- Image - smaller on mobile -->
+            <div class="flex justify-center">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/078892bb26-49e2e096663dd3af8319.png"
+                    class="rounded-xl shadow-xl w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 object-cover"
+                    alt="college dashboard, blue accent, illustration" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Right signup options -->
+    <div id="signup-right-panel"
+        class="w-full lg:w-1/2 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-14 order-1 lg:order-2">
+        {% block auth_content %}
+
+        {% endblock %}
+    </div>
+</section>
+
+{% endblock %}

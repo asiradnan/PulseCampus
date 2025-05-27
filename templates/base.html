@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<!-- <html lang="en"> -->
 <html xmlns="http://www.w3.org/1999/xhtml">
-
-</html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <!-- <link rel="stylesheet" href="{% static  'base.css'  %}"> -->
     <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %} PulseCampus {% endblock %}</title>
 
@@ -49,19 +45,30 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Mobile menu styles */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
     </style>
-
-
 </head>
 
 <body>
     <header id="header" class="w-full shadow-sm bg-white sticky top-0 z-30">
         <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+            <!-- Logo -->
             <div class="flex items-center gap-3">
                 <a href="{% url 'homepage' %}"
                     class="bg-blue-600 text-white text-2xl font-bold px-3 py-1 rounded-lg tracking-tight hover:bg-blue-700 transition">PulseCampus</a>
             </div>
-            <nav class="flex gap-8 items-center" id="nav-main">
+
+            <!-- Desktop Navigation -->
+            <nav class="hidden lg:flex gap-8 items-center" id="nav-main">
                 <a href="{% url 'departments:department_list' %}"
                     class="flex items-center gap-2 {% if request.resolver_match.namespace == 'departments' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-900 transition cursor-pointer">
                     <i class="fa-solid fa-building-columns"></i> Departments
@@ -83,7 +90,9 @@
                     <i class="fa-solid fa-comments"></i> Community
                 </a>
             </nav>
-            <div class="flex items-center gap-4" id="nav-user">
+
+            <!-- Desktop User Menu -->
+            <div class="hidden lg:flex items-center gap-4" id="nav-user">
                 {% if user.is_authenticated %}
                 <a href="{% url 'users:profile' %}" class="flex items-center gap-2">
                     <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
@@ -103,13 +112,77 @@
                 </a>
                 {% endif %}
             </div>
+
+            <!-- Mobile Menu Button -->
+            <button class="lg:hidden flex items-center justify-center w-10 h-10 text-slate-700 hover:text-blue-700 transition" 
+                    id="mobile-menu-button">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden hidden" id="mobile-menu-overlay"></div>
+
+        <!-- Mobile Menu -->
+        <div class="fixed top-0 left-0 h-full w-80 bg-white shadow-lg z-50 lg:hidden mobile-menu" id="mobile-menu">
+            <div class="flex items-center justify-between p-6 border-b">
+                <a href="{% url 'homepage' %}"
+                    class="bg-blue-600 text-white text-xl font-bold px-3 py-1 rounded-lg tracking-tight">PulseCampus</a>
+                <button class="text-slate-700 hover:text-blue-700 transition" id="mobile-menu-close">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <nav class="flex flex-col p-6 space-y-4">
+                <a href="{% url 'departments:department_list' %}"
+                    class="flex items-center gap-3 {% if request.resolver_match.namespace == 'departments' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition py-2">
+                    <i class="fa-solid fa-building-columns"></i> Departments
+                </a>
+                <a href="{% url 'classes:class_list' %}"
+                    class="flex items-center gap-3 {% if request.resolver_match.namespace == 'classes' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition py-2">
+                    <i class="fa-solid fa-chalkboard-teacher"></i> Classes
+                </a>
+                <a href="{% url 'clubs:club_list' %}"
+                    class="flex items-center gap-3 {% if request.resolver_match.namespace == 'clubs' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition py-2">
+                    <i class="fa-solid fa-people-group"></i> Clubs
+                </a>
+                <a href="{% url 'notice:notice_list' %}"
+                    class="flex items-center gap-3 {% if request.resolver_match.namespace == 'notice' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition py-2">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </a>
+                <a href="{% url 'community:post_list' %}"
+                    class="flex items-center gap-3 {% if request.resolver_match.namespace == 'community' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition py-2">
+                    <i class="fa-solid fa-comments"></i> Community
+                </a>
+            </nav>
+
+            <!-- Mobile User Menu -->
+            <div class="border-t p-6 space-y-4">
+                {% if user.is_authenticated %}
+                <a href="{% url 'users:profile' %}" class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+                        class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
+                    Profile
+                </a>
+                <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}"
+                    class="flex items-center gap-3 text-slate-700 font-medium hover:text-red-600 transition py-2">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </a>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
+                    <i class="fa-solid fa-sign-in-alt"></i> Log In
+                </a>
+                <a href="{% url 'users:signup' %}"
+                    class="flex items-center gap-3 bg-blue-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+                    <i class="fa-solid fa-user-plus"></i> Sign Up
+                </a>
+                {% endif %}
+            </div>
         </div>
     </header>
 
     <main id="main-landing" class="max-w-7xl mx-auto px-6 py-10">
         {% block content %}
-
-
         {% endblock %}
     </main>
 
@@ -176,6 +249,47 @@
         </div>
     </footer>
 
+    <!-- JavaScript for mobile menu functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuClose = document.getElementById('mobile-menu-close');
+
+            function openMobileMenu() {
+                mobileMenu.classList.add('open');
+                mobileMenuOverlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileMenu() {
+                mobileMenu.classList.remove('open');
+                mobileMenuOverlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+
+            // Open mobile menu
+            mobileMenuButton.addEventListener('click', openMobileMenu);
+
+            // Close mobile menu
+            mobileMenuClose.addEventListener('click', closeMobileMenu);
+            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+            // Close menu when clicking on a link (optional)
+            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', closeMobileMenu);
+            });
+
+            // Close menu on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+                    closeMobileMenu();
+                }
+            });
+        });
+    </script>
 
 </body>
 
