@@ -3,7 +3,87 @@
 {% block title %} Sign Up {% endblock %}
 
 {% block content %}
-<a href="{% url 'users:student_signup' %}">Sign Up as a Student</a>
-<a href="{% url 'users:teacher_signup' %}">Sign Up as a Teacher</a>
-<a href="{% url 'users:principal_signup' %}">Sign Up as a Principal</a>
+
+
+<section id="signup-section" class="flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[700px]">
+    <!-- Left static content -->
+    <div id="signup-left-static" class="w-full md:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-blue-600 to-blue-400 px-10 py-14 md:py-0 relative">
+        <div class="absolute top-6 left-8 flex gap-2 items-center">
+            <i class="fa-solid fa-graduation-cap text-white text-2xl"></i>
+            <span class="text-white font-bold text-lg tracking-wide">PulseCampus</span>
+        </div>
+        
+        <div class="flex flex-col items-center mt-10 md:mt-0">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4 text-center leading-tight">Shape Your Campus Journey</h2>
+            <p class="text-white/90 text-lg mb-8 max-w-md text-center">Join a thriving digital campus. Whether you're a student, teacher, or principal, PulseCampus is your all-in-one platform for announcements, clubs, forums, and department management.</p>
+            
+            <!-- <div class="flex gap-4 mb-6">
+                <span class="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-2 rounded-lg shadow transition cursor-pointer text-base">
+                    <i class="fa-solid fa-building-columns"></i> Departments
+                </span>
+                <span class="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-5 py-2 rounded-lg shadow transition cursor-pointer text-base">
+                    <i class="fa-solid fa-people-group"></i> Clubs
+                </span>
+            </div> -->
+            
+            <div class="flex justify-center">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/078892bb26-49e2e096663dd3af8319.png" 
+                     class="rounded-xl shadow-xl w-64 h-64 object-cover" 
+                     alt="college dashboard, blue accent, illustration" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Right signup options -->
+    <div id="signup-right-panel" class="w-full md:w-1/2 flex flex-col justify-center items-center px-8 py-14">
+        <div class="w-full max-w-md mx-auto">
+            <h3 class="text-3xl font-bold text-blue-800 mb-2 text-center">Sign Up</h3>
+            <p class="text-slate-600 mb-8 text-center">Choose your role to get started with PulseCampus</p>
+            
+            <div class="flex flex-col gap-7" id="signup-role-options">
+                <!-- Student Card -->
+                <a href="{% url 'users:student_signup' %}" id="card-signup-student" class="group rounded-2xl border border-slate-200 shadow hover:shadow-xl bg-slate-50 transition cursor-pointer hover:-translate-y-1 p-8 flex items-center gap-5 hover:bg-blue-50 no-underline">
+                    <div class="bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center text-2xl shadow group-hover:bg-blue-700 transition">
+                        <i class="fa-solid fa-user-graduate"></i>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-blue-800 group-hover:text-blue-900">Sign Up as Student</div>
+                        <div class="text-slate-600 text-sm mt-1">Access clubs, announcements, forums & more.</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-blue-500 text-lg ml-auto opacity-0 group-hover:opacity-100 transition"></i>
+                </a>
+
+                <!-- Teacher Card -->
+                <a href="{% url 'users:teacher_signup' %}" id="card-signup-teacher" class="group rounded-2xl border border-slate-200 shadow hover:shadow-xl bg-slate-50 transition cursor-pointer hover:-translate-y-1 p-8 flex items-center gap-5 hover:bg-green-50 no-underline">
+                    <div class="bg-green-500 text-white rounded-full w-14 h-14 flex items-center justify-center text-2xl shadow group-hover:bg-green-600 transition">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-green-700 group-hover:text-green-900">Sign Up as Teacher</div>
+                        <div class="text-slate-600 text-sm mt-1">Manage classes, post announcements, guide students.</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-green-600 text-lg ml-auto opacity-0 group-hover:opacity-100 transition"></i>
+                </a>
+
+                <!-- Principal Card -->
+                <a href="{% url 'users:principal_signup' %}" id="card-signup-principal" class="group rounded-2xl border border-slate-200 shadow hover:shadow-xl bg-slate-50 transition cursor-pointer hover:-translate-y-1 p-8 flex items-center gap-5 hover:bg-yellow-50 no-underline">
+                    <div class="bg-yellow-400 text-white rounded-full w-14 h-14 flex items-center justify-center text-2xl shadow group-hover:bg-yellow-500 transition">
+                        <i class="fa-solid fa-user-tie"></i>
+                    </div>
+                    <div>
+                        <div class="text-lg font-semibold text-yellow-700 group-hover:text-yellow-900">Sign Up as Principal</div>
+                        <div class="text-slate-600 text-sm mt-1">Oversee campus, departments, and analytics.</div>
+                    </div>
+                    <i class="fa-solid fa-arrow-right text-yellow-600 text-lg ml-auto opacity-0 group-hover:opacity-100 transition"></i>
+                </a>
+            </div>
+            
+            <div class="mt-10 text-center">
+                <span class="text-slate-500 text-sm">Already have an account?</span>
+                <a href="{% url 'users:login' %}" class="text-blue-600 font-semibold ml-2 hover:underline transition cursor-pointer">Log In</a>
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

@@ -1,19 +1,74 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
-</head>
-<body>
-    <form method="post">
-        {% csrf_token %}    
-        {{form.as_p}}
-        <button type="submit">Sign Up</button>
-    </form>
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{message}}</p>
-        {% endfor %}
-    {% endif %}
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %} Sign Up {% endblock %}
+
+{% block content %}
+
+<section class="flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[700px]">
+    <!-- Left static content -->
+    <div class="w-full md:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-blue-600 to-blue-400 px-10 py-14 md:py-0 relative">
+        <div class="absolute top-6 left-8 flex gap-2 items-center">
+            <i class="fa-solid fa-graduation-cap text-white text-2xl"></i>
+            <span class="text-white font-bold text-lg tracking-wide">PulseCampus</span>
+        </div>
+        
+        <div class="flex flex-col items-center mt-10 md:mt-0">
+            <h2 class="text-4xl md:text-5xl font-bold text-white mb-4 text-center leading-tight">Shape Your Campus Journey</h2>
+            <p class="text-white/90 text-lg mb-8 max-w-md text-center">Join a thriving digital campus. Whether you're a student, teacher, or principal, PulseCampus is your all-in-one platform for announcements, clubs, forums, and department management.</p>
+            
+            <div class="flex justify-center">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/078892bb26-49e2e096663dd3af8319.png" 
+                     class="rounded-xl shadow-xl w-64 h-64 object-cover" 
+                     alt="college dashboard, blue accent, illustration" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Right signup form -->
+    <div class="w-full md:w-1/2 flex flex-col justify-center items-center px-8 py-14">
+        <div class="w-full max-w-md mx-auto">
+            <h3 class="text-3xl font-bold text-blue-800 mb-2 text-center">Sign Up</h3>
+            <p class="text-slate-600 mb-8 text-center">Fill your details to create an account</p>
+            
+            <form method="post" class="space-y-5">
+                {% csrf_token %}
+                
+                {% for field in form %}
+                    <div class="flex flex-col gap-1">
+                        <label for="{{ field.id_for_label }}" class="text-sm font-medium text-blue-900">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <span class="text-red-500 text-sm">{{ error }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                <button type="submit" class="w-full mt-2 bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-lg text-lg shadow transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-plus"></i>
+                    Sign Up
+                </button>
+            </form>
+            
+            <!-- {% if messages %}
+                <div class="mt-4">
+                    {% for message in messages %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-2">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+             -->
+            <div class="mt-8 text-center">
+                <span class="text-slate-500 text-sm">Already have an account?</span>
+                <a href="{% url 'users:login' %}" class="text-blue-600 font-semibold ml-2 hover:underline transition cursor-pointer">Log In</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
