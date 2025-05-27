@@ -1,5 +1,168 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<p>Hello World!</p>
+<section id="hero-section" class="flex flex-col md:flex-row items-center gap-10 mb-12">
+            <div class="flex-1" id="hero-text">
+                <h1 class="text-4xl md:text-5xl font-bold text-blue-800 mb-4 leading-tight tracking-tight">Empowering College Life<br /><span class="text-blue-600">with PulseCampus</span></h1>
+                <p class="text-lg text-slate-600 mb-6">Centralized hub to manage departments, clubs, announcements, and connect with forums. Streamline your campus experience with a modern dashboard built for students, faculty, and staff.</p>
+                <div class="flex gap-4">
+                    <span class="bg-blue-700 hover:bg-blue-800 text-white font-semibold px-6 py-3 rounded-lg shadow transition cursor-pointer" id="hero-get-started">
+                        <i class="fa-solid fa-rocket mr-2"></i> Get Started
+                    </span>
+                    <span class="bg-slate-100 hover:bg-slate-200 text-blue-700 font-semibold px-6 py-3 rounded-lg shadow border border-blue-100 transition cursor-pointer" id="hero-learn-more">
+                        <i class="fa-solid fa-circle-info mr-2"></i> Learn More
+                    </span>
+                </div>
+            </div>
+            <div class="flex-1 flex items-center justify-center min-w-[300px]" id="hero-visual">
+                <img class="w-[340px] h-[340px] rounded-xl shadow-lg object-cover" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/078892bb26-49e2e096663dd3af8319.png" alt="college dashboard, modern, vibrant, blue accent, illustration, student clubs, forum, announcement, flat style" />
+            </div>
+        </section>
+
+        <section id="campus-overview" class="bg-white rounded-2xl shadow-lg px-8 py-8 mb-12">
+            <div class="flex flex-col md:flex-row gap-8">
+                <div class="flex-1">
+                    <h2 class="text-2xl font-semibold text-blue-800 mb-4 flex items-center gap-3">
+                        <i class="fa-solid fa-landmark text-blue-600"></i> Welcome to Our Campus
+                    </h2>
+                    <p class="text-slate-600 mb-6">Nestled in the heart of the city, our sprawling 50-acre campus combines modern architecture with lush greenery, providing an ideal environment for academic excellence and personal growth.</p>
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-50 p-4 rounded-lg">
+                            <div class="text-blue-600 font-semibold mb-1">Location</div>
+                            <p class="text-sm text-slate-600">Central Business District<br />Easy access to tech hubs</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg">
+                            <div class="text-blue-600 font-semibold mb-1">Infrastructure</div>
+                            <p class="text-sm text-slate-600">Smart Classrooms<br />Modern Labs &amp; Library</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-1">
+                    <img class="w-full h-[300px] object-cover rounded-xl shadow-lg" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/e41342865f-783d247154df9c093ffb.png" alt="modern college campus building, architectural photography, sunny day, students walking, green landscape" />
+                </div>
+            </div>
+        </section>
+
+        <section id="department-highlights" class="bg-white rounded-2xl shadow-lg px-8 py-8 mb-14">
+            <h2 class="text-2xl font-semibold text-blue-800 mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-building-columns text-blue-600"></i> Academic Excellence
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="rounded-xl bg-slate-50 p-6">
+                    <div class="text-lg font-semibold text-blue-800 mb-3">12 Departments</div>
+                    <p class="text-slate-600 text-sm">Offering undergraduate and postgraduate programs across various disciplines.</p>
+                </div>
+                <div class="rounded-xl bg-slate-50 p-6">
+                    <div class="text-lg font-semibold text-blue-800 mb-3">Research Centers</div>
+                    <p class="text-slate-600 text-sm">State-of-the-art facilities supporting groundbreaking research initiatives.</p>
+                </div>
+                <div class="rounded-xl bg-slate-50 p-6">
+                    <div class="text-lg font-semibold text-blue-800 mb-3">Industry Connect</div>
+                    <p class="text-slate-600 text-sm">Strong partnerships with leading companies for internships and placements.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboard-overview" class="bg-white rounded-2xl shadow-lg px-8 py-8 mb-12">
+            <h2 class="text-2xl font-semibold text-blue-800 mb-6 flex items-center gap-3" id="dashboard-title">
+                <i class="fa-solid fa-gauge-high text-blue-600"></i> Dashboard Overview
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8" id="dashboard-cards">
+                <div class="rounded-xl bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-lg p-6 flex flex-col gap-3" id="card-department-updates">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-building-columns text-3xl"></i>
+                        <span class="text-lg font-semibold">Department Updates</span>
+                    </div>
+                    <ul class="mt-2 text-white/90 text-sm pl-2 list-disc space-y-1">
+                        <li>Computer Science: New AI Lab Opening</li>
+                        <li>Physics: Guest Lecture on Quantum Tech</li>
+                        <li>Mathematics: Calculus Workshop Series</li>
+                    </ul>
+                    <span class="text-blue-100 underline mt-2 hover:text-white text-xs font-medium transition cursor-pointer">See all updates</span>
+                </div>
+                <div class="rounded-xl bg-gradient-to-tr from-green-400 to-green-300 text-white shadow-lg p-6 flex flex-col gap-3" id="card-club-activity">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-people-group text-3xl"></i>
+                        <span class="text-lg font-semibold">Student Clubs</span>
+                    </div>
+                    <ul class="mt-2 text-white/90 text-sm pl-2 list-disc space-y-1">
+                        <li>Drama Club: Auditions this Friday</li>
+                        <li>Robotics: Inter-College Competition</li>
+                        <li>Photography: Monthly Theme Announced</li>
+                    </ul>
+                    <span class="text-green-100 underline mt-2 hover:text-white text-xs font-medium transition cursor-pointer">Explore clubs</span>
+                </div>
+                <div class="rounded-xl bg-gradient-to-tr from-yellow-400 to-yellow-200 text-slate-800 shadow-lg p-6 flex flex-col gap-3" id="card-announcements">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-bullhorn text-3xl"></i>
+                        <span class="text-lg font-semibold">Announcements</span>
+                    </div>
+                    <ul class="mt-2 text-slate-800/90 text-sm pl-2 list-disc space-y-1">
+                        <li>Semester Exams Start June 12</li>
+                        <li>Annual Fest Registration Open</li>
+                        <li>Library Timing Extended</li>
+                    </ul>
+                    <span class="text-yellow-700 underline mt-2 hover:text-yellow-900 text-xs font-medium transition cursor-pointer">All announcements</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="recent-activity" class="mb-12">
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-xl font-semibold text-blue-800 flex items-center gap-2" id="stats-title">
+                    <i class="fa-solid fa-chart-line"></i> College Statistics
+                </h3>
+            </div>
+            <div class="bg-white rounded-xl shadow px-6 py-8 grid grid-cols-1 md:grid-cols-4 gap-6" id="stats-grid">
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-blue-600 mb-2">12+</div>
+                    <div class="text-slate-600">Departments</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-green-600 mb-2">250+</div>
+                    <div class="text-slate-600">Faculty Members</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-yellow-600 mb-2">5000+</div>
+                    <div class="text-slate-600">Students</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl font-bold text-purple-600 mb-2">98%</div>
+                    <div class="text-slate-600">Placement Rate</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements" class="bg-white rounded-2xl shadow-lg px-8 py-8 mb-14">
+            <h2 class="text-2xl font-semibold text-blue-800 mb-6 flex items-center gap-3">
+                <i class="fa-solid fa-trophy text-blue-600"></i> College Achievements
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="rounded-xl bg-slate-50 p-6">
+                    <div class="text-lg font-semibold text-blue-800 mb-3">NAAC 'A++' Grade</div>
+                    <p class="text-slate-600 text-sm">Highest accreditation for academic excellence and institutional quality.</p>
+                </div>
+                <div class="rounded-xl bg-slate-50 p-6">
+                    <div class="text-lg font-semibold text-blue-800 mb-3">Research Excellence</div>
+                    <p class="text-slate-600 text-sm">Over 200 research papers published in international journals annually.</p>
+                </div>
+                <div class="rounded-xl bg-slate-50 p-6">
+                    <div class="text-lg font-semibold text-blue-800 mb-3">Industry Partners</div>
+                    <p class="text-slate-600 text-sm">Collaborations with 50+ leading companies for internships and placements.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cta-section" class="bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl shadow-lg px-10 py-12 flex flex-col md:flex-row justify-between items-center gap-8 mb-14">
+            <div class="flex-1" id="cta-text">
+                <h4 class="text-2xl font-bold text-white mb-3">Ready to experience campus life like never before?</h4>
+                <p class="text-white/90 mb-5 max-w-md">Join PulseCampus and transform the way your college connects, organizes, and thrives. Stay ahead with instant updates, dynamic clubs, and thriving forums.</p>
+                <span class="bg-white text-blue-700 font-semibold px-7 py-3 rounded-lg shadow hover:bg-blue-50 transition cursor-pointer" id="cta-join-now">
+                    <i class="fa-solid fa-user-plus mr-2"></i> Join Now
+                </span>
+            </div>
+            <div class="flex-1 flex justify-end min-w-[260px]" id="cta-visual">
+                <img class="w-[260px] h-[260px] rounded-lg object-cover shadow-xl" src="https://storage.googleapis.com/uxpilot-auth.appspot.com/5b99d8525a-2a0ee5a7a6332b00d449.png" alt="college students collaborating, energetic, blue accent, modern, illustration, flat style" />
+            </div>
+        </section>
 {% endblock %}

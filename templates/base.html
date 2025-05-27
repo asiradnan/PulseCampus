@@ -1,46 +1,182 @@
-<html lang="en">
+<!DOCTYPE html>
+<!-- <html lang="en"> -->
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+</html>
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <link rel="stylesheet" href="{% static  'base.css'  %}">
+    <!-- <link rel="stylesheet" href="{% static  'base.css'  %}"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>{% block title %} PulseCampus {% endblock %}</title>
+
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest' };</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous"
+        referrerpolicy="no-referrer"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap" />
+    <style>
+        .highlighted-section {
+            outline: 2px solid #3F20FB;
+            background-color: rgba(63, 32, 251, 0.1);
+        }
+
+        .edit-button {
+            position: absolute;
+            z-index: 1000;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
+        html,
+        body {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+
+
 </head>
 
 <body>
-    <nav>
-        <a href="{% url 'homepage' %}">Home</a>
-        <a href="{% url 'departments:department_list' %}">Departments</a>
-        <a href="{% url 'classes:class_list' %}">Classes</a>
-        <a href="{% url 'clubs:club_list' %}">Clubs</a> 
-        <a href="{% url 'community:post_list' %}">Community</a>
-        <a href="{% url 'notice:notice_list' %}">Notices</a>
-        {% if user.is_authenticated %} 
-        <p>
-            <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}">Logout</a>
-            <a href="{% url 'users:profile' %}">Profile</a>
-            
-        </p>
-        {% else %} 
-            <p><a href="{% url 'users:signup' %}">Sign Up</a></p> 
-            <p><a href="{% url 'users:login' %}">Log In</a></p> 
-        {% endif %}
-    </nav>
-    <h1>Pulse Campus</h1>
-    {% block content %}
-    {% endblock %}
-    {% if messages %}
-        {% for message in messages %}
-            {{message}}
-        {% endfor %}
-    {% endif %}
+    <header id="header" class="w-full shadow-sm bg-white sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+            <div class="flex items-center gap-3">
+                <a href="{% url 'homepage' %}"
+                    class="bg-blue-600 text-white text-2xl font-bold px-3 py-1 rounded-lg tracking-tight hover:bg-blue-700 transition">PulseCampus</a>
+            </div>
+            <nav class="flex gap-8 items-center" id="nav-main">
+                <a href="{% url 'departments:department_list' %}"
+                    class="flex items-center gap-2 {% if request.resolver_match.namespace == 'departments' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-900 transition cursor-pointer">
+                    <i class="fa-solid fa-building-columns"></i> Departments
+                </a>
+                <a href="{% url 'classes:class_list' %}"
+                    class="flex items-center gap-2 {% if request.resolver_match.namespace == 'classes' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition cursor-pointer">
+                    <i class="fa-solid fa-chalkboard-teacher"></i> Classes
+                </a>
+                <a href="{% url 'clubs:club_list' %}"
+                    class="flex items-center gap-2 {% if request.resolver_match.namespace == 'clubs' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition cursor-pointer">
+                    <i class="fa-solid fa-people-group"></i> Clubs
+                </a>
+                <a href="{% url 'notice:notice_list' %}"
+                    class="flex items-center gap-2 {% if request.resolver_match.namespace == 'notice' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition cursor-pointer">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </a>
+                <a href="{% url 'community:post_list' %}"
+                    class="flex items-center gap-2 {% if request.resolver_match.namespace == 'community' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition cursor-pointer">
+                    <i class="fa-solid fa-comments"></i> Community
+                </a>
+            </nav>
+            <div class="flex items-center gap-4" id="nav-user">
+                {% if user.is_authenticated %}
+                <a href="{% url 'users:profile' %}" class="flex items-center gap-2">
+                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
+                        class="w-9 h-9 rounded-full border-2 border-blue-600" alt="User Avatar" />
+                </a>
+                <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}"
+                    class="text-slate-700 font-medium hover:text-red-600 transition">
+                    <i class="fa-solid fa-sign-out-alt"></i> Logout
+                </a>
+                {% else %}
+                <a href="{% url 'users:login' %}" class="text-slate-700 font-medium hover:text-blue-700 transition">
+                    <i class="fa-solid fa-sign-in-alt"></i> Log In
+                </a>
+                <a href="{% url 'users:signup' %}"
+                    class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
+                    Sign Up
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main id="main-landing" class="max-w-7xl mx-auto px-6 py-10">
+        {% block content %}
+
+
+        {% endblock %}
+    </main>
+
+    {% for message in messages %}
+        {{message}}
+    {% endfor %}
     <br>
     <br>
     <br>
-    <footer>
-        <a href="https://github.com/asiradnan/PulseCampus">GitHub</a>
+
+    <footer id="footer" class="bg-blue-900 text-white px-6 py-8">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
+            <div id="footer-brand" class="flex flex-col gap-2">
+                <a href="{% url 'homepage' %}"
+                    class="text-2xl font-bold tracking-tight hover:text-blue-200 transition">PulseCampus</a>
+                <p class="text-blue-200 text-sm max-w-xs">Your all-in-one campus management platform for departments,
+                    clubs, announcements, and forums.</p>
+            </div>
+            <div id="footer-links" class="flex flex-col gap-2 mt-6 md:mt-0">
+                <span class="font-semibold uppercase text-blue-200 text-xs mb-1">Quick Links</span>
+                <a href="{% url 'departments:department_list' %}"
+                    class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'departments' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
+                    <i class="fa-solid fa-building-columns"></i> Departments
+                </a>
+                <a href="{% url 'classes:class_list' %}"
+                    class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'classes' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
+                    <i class="fa-solid fa-chalkboard-teacher"></i> Classes
+                </a>
+                <a href="{% url 'clubs:club_list' %}"
+                    class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'clubs' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
+                    <i class="fa-solid fa-people-group"></i> Clubs
+                </a>
+                <a href="{% url 'notice:notice_list' %}"
+                    class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'notice' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </a>
+                <a href="{% url 'community:post_list' %}"
+                    class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'community' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
+                    <i class="fa-solid fa-comments"></i> Community
+                </a>
+            </div>
+            <div id="footer-social" class="flex flex-col gap-3 mt-6 md:mt-0">
+                <span class="font-semibold uppercase text-blue-200 text-xs mb-1">Connect With Us</span>
+                <a href="https://github.com/asiradnan" target="_blank"
+                    class="text-white text-sm flex items-center gap-3 hover:text-gray-300 transition">
+                    <i class="fa-brands fa-github text-white text-lg"></i> asiradnan
+                </a>
+                <a href="https://linkedin.com/in/asiradnan" target="_blank"
+                    class="text-white text-sm flex items-center gap-3 hover:text-gray-300 transition">
+                    <i class="fa-brands fa-linkedin text-white text-lg"></i> asiradnan
+                </a>
+                <a href="mailto:asiradnan23@gmail.com"
+                    class="text-white text-sm flex items-center gap-3 hover:text-gray-300 transition">
+                    <i class="fa-solid fa-envelope text-white text-lg"></i> asiradnan23@gmail.com
+                </a>
+            </div>
+        </div>
+        <div class="text-center text-blue-200 text-xs mt-8 border-t border-blue-800 pt-6" id="footer-bottom">
+            © 2025 PulseCampus. All rights reserved. |
+            <a href="https://github.com/asiradnan/PulseCampus" target="_blank"
+                class="inline-flex items-center gap-1 bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded-md font-medium transition ml-2">
+                <i class="fa-brands fa-github"></i> View on GitHub
+            </a>
+        </div>
     </footer>
+
+
 </body>
 
 </html>
