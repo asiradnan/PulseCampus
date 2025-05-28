@@ -1,32 +1,218 @@
 {% extends 'base.html' %}
-{% block title %}   {{class}} {% endblock %}
+
+{% block title %}{{ class.class_code }} Class{% endblock %}
+
 {% block content %}
-{% if user.is_authenticated and user.principal %}
-<a href="{% url 'classes:class_update' class.pk %}">Edit Class</a>  
-<form method="post" action="{% url 'classes:class_delete' class.pk %}">
-    {% csrf_token %}
-<button type="submit">Delete</button>
-{% endif %} 
-</form>
-<h1>{{class}}</h1>
-Room Number: {{ class.room_number}}
-Building Number: {{ class.building_number}}
-<br>
-Students:
-{% if class.student_set.all %}
-<ul>
-    {% for student in class.student_set.all %}
-    <li>{{student}}
-        {% if student.is_captain %} - Captain {% endif %} <br>
-        <form method="post" action = "{% url 'classes:toggle_captain' pk=class.pk %}">
-            {% csrf_token %}
-            <input type="hidden" name="student_id" value="{{student.student_id}}">
-            <button type="submit">Toggle Captain</button>
-        </form> 
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No students are enrolled in this class.</p>
-{% endif %}
+<div class="max-w-4xl mx-auto">
+    <!-- Header Section -->
+    <div class="flex items-center gap-3 mb-8">
+        <a href="{% url 'classes:class_list' %}" 
+           class="text-slate-600 hover:text-blue-600 transition">
+            <i class="fa-solid fa-arrow-left text-xl"></i>
+        </a>
+        <div class="flex-1">
+            <h1 class="text-3xl font-bold text-blue-800 flex items-center gap-3">
+                <i class="fa-solid fa-chalkboard-teacher text-blue-600"></i>
+                {{ class.class_code }}
+            </h1>
+            <p class="text-slate-600 mt-1">Class Details</p>
+        </div>
+        <!-- {% if user.is_authenticated and user.principal %}
+        <a href="{% url 'classes:class_update' class.pk %}" 
+           class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+            <i class="fa-solid fa-edit"></i> Edit Class
+        </a>
+        {% endif %} -->
+    </div>
+
+    <!-- Main Content -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Class Information Card -->
+        <div class="lg:col-span-2">
+            <div class="bg-white rounded-xl shadow-sm p-8">
+                <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-info-circle text-blue-600"></i>
+                    Class Information
+                </h2>
+                
+                <div class="space-y-6">
+                    <!-- Class Code -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-graduation-cap text-blue-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-700 mb-1">Class Code</h3>
+                            <p class="text-slate-600">{{ class.class_code }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Location Information -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-map-marker-alt text-green-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-700 mb-1">Location</h3>
+                            <p class="text-slate-600">Room {{ class.room_number }}, Building {{ class.building_number }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Room Number -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-door-open text-purple-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-700 mb-1">Room Number</h3>
+                            <p class="text-slate-600">{{ class.room_number }}</p>
+                        </div>
+                    </div>
+
+                    <!-- Building Number -->
+                    <div class="flex items-start gap-4">
+                        <div class="flex-shrink-0 w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fa-solid fa-building text-orange-600 text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-slate-700 mb-1">Building Number</h3>
+                            <p class="text-slate-600">{{ class.building_number }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <div class="bg-white rounded-xl shadow-sm p-8 mt-6">
+                <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-blue-600"></i>
+                    Students
+                </h2>
+                
+                {% if class.student_set.all %}
+                <div class="space-y-4">
+                    {% for student in class.student_set.all %}
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                <i class="fa-solid fa-user text-blue-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-slate-800">{{ student }}</p>
+                                {% if student.is_captain %}
+                                <span class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-medium rounded-full">
+                                    <i class="fa-solid fa-crown"></i> Captain
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% if user.is_authenticated and user.principal %}
+                        <form method="post" action="{% url 'classes:toggle_captain' pk=class.pk %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="student_id" value="{{ student.student_id }}">
+                            <button type="submit" 
+                                    class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+                                Toggle Captain
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-8">
+                    <i class="fa-solid fa-user-slash text-4xl text-slate-300 mb-3"></i>
+                    <p class="text-slate-500">No students are enrolled in this class.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Quick Actions Sidebar -->
+        <div class="space-y-6">
+            <!-- Quick Actions Card -->
+            <div class="bg-white rounded-xl shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-bolt text-yellow-600"></i>
+                    Quick Actions
+                </h3>
+                
+                <div class="space-y-3">
+                    {% if user.is_authenticated and user.principal %}
+                    <a href="{% url 'classes:class_update' class.pk %}" 
+                       class="w-full bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-3 rounded-lg flex items-center gap-3 transition">
+                        <i class="fa-solid fa-edit"></i>
+                        <span>Edit Class</span>
+                    </a>
+                    <form method="post" action="{% url 'classes:class_delete' class.pk %}" class="w-full">
+                        {% csrf_token %}
+                        <button type="submit" 
+                                onclick="return confirm('Are you sure you want to delete this class?')"
+                                class="w-full bg-red-50 hover:bg-red-100 text-red-700 px-4 py-3 rounded-lg flex items-center gap-3 transition">
+                            <i class="fa-solid fa-trash"></i>
+                            <span>Delete Class</span>
+                        </button>
+                    </form>
+                    {% endif %}
+                    
+                    <a href="{% url 'classes:class_list' %}" 
+                       class="w-full bg-slate-50 hover:bg-slate-100 text-slate-700 px-4 py-3 rounded-lg flex items-center gap-3 transition">
+                        <i class="fa-solid fa-list"></i>
+                        <span>All Classes</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Location Summary Card -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border border-blue-100">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-location-dot text-blue-600"></i>
+                    Location Summary
+                </h3>
+                
+                <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-blue-600 font-medium">Room:</span>
+                        <span class="text-blue-800">{{ class.room_number }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-blue-600 font-medium">Building:</span>
+                        <span class="text-blue-800">{{ class.building_number }}</span>
+                    </div>
+                    <div class="pt-2 mt-3 border-t border-blue-200">
+                        <span class="text-blue-600 font-medium">Full Address:</span>
+                        <p class="text-blue-800 font-semibold mt-1">
+                            Room {{ class.room_number }}, Building {{ class.building_number }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Class Stats Card -->
+            <div class="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 class="text-lg font-semibold text-slate-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-simple text-slate-600"></i>
+                    Class Stats
+                </h3>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600">Total Students:</span>
+                        <span class="font-bold text-slate-800">{{ class.student_set.count }}</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-slate-600">Class Captain:</span>
+                        <span class="font-bold text-slate-800">
+                            {% for student in class.student_set.all %}
+                                {% if student.is_captain %}{{ student }}{% endif %}
+                            {% empty %}
+                                None
+                            {% endfor %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

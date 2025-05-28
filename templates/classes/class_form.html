@@ -1,10 +1,140 @@
 {% extends 'base.html' %}
-{% block title %} Create Class {% endblock %}   
 
-{% block content %} 
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Create</button>
-    </form>
+{% block title %}
+    {% if form.instance.pk %}Edit Class{% else %}New Class{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-14">
+    <div class="bg-white rounded-2xl shadow-lg px-4 sm:px-8 py-6 sm:py-10">
+        <div class="flex items-center gap-4 mb-8">
+            <span class="bg-blue-100 text-blue-700 rounded-lg p-3">
+                <i class="fa-solid fa-chalkboard-teacher text-2xl"></i>
+            </span>
+            <div>
+                <h1 class="text-2xl font-bold text-blue-800 mb-1">
+                    {% if form.instance.pk %}Edit Class{% else %}Create Class{% endif %}
+                </h1>
+                <p class="text-slate-500 text-base">
+                    {% if form.instance.pk %}
+                        Update the class information below.
+                    {% else %}
+                        Add a new class to your college.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-7">
+            {% csrf_token %}
+            
+            <!-- Class Code Field -->
+            <div class="flex flex-col gap-2">
+                <label for="{{ form.class_code.id_for_label }}" 
+                       class="font-semibold text-sm text-slate-700 flex gap-1 items-center">
+                    <i class="fa-solid fa-graduation-cap text-blue-600"></i>
+                    Class Code
+                </label>
+                <input type="text" 
+                       name="{{ form.class_code.name }}" 
+                       id="{{ form.class_code.id_for_label }}"
+                       value="{{ form.class_code.value|default:'' }}"
+                       placeholder="e.g., 11A, 11B, 12A"
+                       class="bg-[#f5f7fa] border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200 transition text-base font-medium"
+                       maxlength="2"
+                       {% if form.class_code.field.required %}required{% endif %}>
+                {% if form.class_code.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.class_code.errors %}
+                            <p class="flex items-center gap-2">
+                                <i class="fa-solid fa-exclamation-circle"></i>
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Room Number Field -->
+            <div class="flex flex-col gap-2">
+                <label for="{{ form.room_number.id_for_label }}" 
+                       class="font-semibold text-sm text-slate-700 flex gap-1 items-center">
+                    <i class="fa-solid fa-door-open text-blue-600"></i>
+                    Room Number
+                </label>
+                <input type="number" 
+                       name="{{ form.room_number.name }}" 
+                       id="{{ form.room_number.id_for_label }}"
+                       value="{{ form.room_number.value|default:'' }}"
+                       placeholder="e.g., 1, 2, 3"
+                       class="bg-[#f5f7fa] border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200 transition text-base font-medium"
+                       maxlength="3"
+                       {% if form.room_number.field.required %}required{% endif %}>
+                {% if form.room_number.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.room_number.errors %}
+                            <p class="flex items-center gap-2">
+                                <i class="fa-solid fa-exclamation-circle"></i>
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Building Number Field -->
+            <div class="flex flex-col gap-2">
+                <label for="{{ form.building_number.id_for_label }}" 
+                       class="font-semibold text-sm text-slate-700 flex gap-1 items-center">
+                    <i class="fa-solid fa-building text-blue-600"></i>
+                    Building Number
+                </label>
+                <input type="number" 
+                       name="{{ form.building_number.name }}" 
+                       id="{{ form.building_number.id_for_label }}"
+                       value="{{ form.building_number.value|default:'' }}"
+                       placeholder="e.g., 1, 2"
+                       class="bg-[#f5f7fa] border border-slate-200 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-200 transition text-base font-medium"
+                       maxlength="2"
+                       {% if form.building_number.field.required %}required{% endif %}>
+                {% if form.building_number.errors %}
+                    <div class="text-red-600 text-sm mt-1">
+                        {% for error in form.building_number.errors %}
+                            <p class="flex items-center gap-2">
+                                <i class="fa-solid fa-exclamation-circle"></i>
+                                {{ error }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+                    {% for error in form.non_field_errors %}
+                        <p class="text-red-600 text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-exclamation-triangle"></i>
+                            {{ error }}
+                        </p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Action Buttons - Responsive -->
+            <div class="flex flex-col sm:flex-row sm:justify-end gap-4 pt-2">
+                <!-- Mobile: Full width buttons, Desktop: Right aligned -->
+                <a href="{% url 'classes:class_list' %}" 
+                   class="w-full sm:w-auto px-5 py-3 sm:py-2 rounded-lg border border-slate-200 bg-white text-slate-600 font-semibold hover:bg-slate-50 transition text-center text-sm sm:text-base">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Cancel
+                </a>
+                <button type="submit" 
+                        class="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition flex items-center justify-center gap-2 text-sm sm:text-base">
+                    <i class="fa-solid fa-{% if form.instance.pk %}save{% else %}check{% endif %}"></i> 
+                    {% if form.instance.pk %}Update Class{% else %}Create Class{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
