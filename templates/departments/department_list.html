@@ -3,14 +3,60 @@
 {% block title %}Departments{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated and user.principal %}
-<a href="{% url 'departments:department_create' %}">Create Department</a>
-{% endif %}
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-blue-800">Departments</h1>
+    {% if user.is_authenticated and user.principal %}
+    <a href="{% url 'departments:department_create' %}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+        <i class="fa-solid fa-plus"></i> Add Department
+    </a>
+    {% endif %}
+</div>
+
 {% if department_list %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     {% for department in department_list %}
-    <a href="{%url 'departments:department_detail' pk=department.pk %}">{{ department }}</a>
+    <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition">
+        <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <i class="text-2xl text-blue-600 fa-solid fa-building-columns"></i>
+                <h3 class="text-lg font-semibold text-blue-800">{{ department.department_name }}</h3>
+            </div>
+            {% comment %}
+            {% if user.is_authenticated and user.principal %}
+            <div class="relative">
+                <i class="text-slate-400 cursor-pointer fa-solid fa-ellipsis-vertical"></i>
+                <!-- You can add dropdown menu here for edit/delete options -->
+            </div>
+            {% endif %}
+            {% endcomment %}
+        </div>
+
+        <div class="space-y-3 mb-4">
+            <div class="flex items-center gap-2 text-sm text-slate-500">
+                <i class="fa-solid fa-map-marker-alt text-blue-500"></i>
+                <span>Room {{ department.room_number }}, Building {{ department.building_number }}</span>
+            </div>
+        </div>
+
+        <a href="{% url 'departments:department_detail' pk=department.pk %}"
+            class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium text-sm transition">
+            View Details <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
     {% endfor %}
+</div>
 {% else %}
-<p>There are no departments.</p>
+<div class="text-center py-12">
+    <i class="fa-solid fa-building-columns text-6xl text-slate-300 mb-4"></i>
+    <h3 class="text-xl font-semibold text-slate-600 mb-2">No Departments Found</h3>
+    <p class="text-slate-500 mb-6">There are no departments available at the moment.</p>
+    {% if user.is_authenticated and user.principal %}
+    <a href="{% url 'departments:department_create' %}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center gap-2 transition">
+        <i class="fa-solid fa-plus"></i> Create First Department
+    </a>
+    {% endif %}
+</div>
 {% endif %}
 {% endblock %}

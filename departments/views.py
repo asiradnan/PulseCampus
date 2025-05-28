@@ -15,7 +15,6 @@ class DepartmentCreateView(PrincipalRequiredMixin, CreateView):
     model = Department
     fields = "__all__"
     def test_func(self):
-        print(self.request.user)
         return hasattr(self.request.user, 'principal')
 
 class DepartmentDetailView(DetailView):
