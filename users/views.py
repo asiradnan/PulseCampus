@@ -223,4 +223,9 @@ def profile(request):
         # print(form)
         # print(form_class)
     return render(request, 'users/profile.html', {'form': form})
+
+def change_password(request):
+    pass
     
+def delete_account(request):
+    pass
