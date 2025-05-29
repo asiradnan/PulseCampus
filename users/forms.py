@@ -52,7 +52,8 @@ class StudentForm(forms.ModelForm):
         widgets = {
             'student_id': forms.TextInput(attrs={
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition',
-                'placeholder': 'Enter student ID'
+                'placeholder': 'Enter student ID',
+                'maxlength': '10'
             }),
             'student_class': forms.Select(attrs={
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 bg-white text-base'
@@ -61,7 +62,8 @@ class StudentForm(forms.ModelForm):
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition resize-none',
                 'rows': 3,
                 'cols': 40,
-                'placeholder': 'Type your address'
+                'placeholder': 'Type your address',
+                'maxlength': '500'
             })
         }
     
@@ -126,10 +128,13 @@ class TeacherForm(forms.ModelForm):
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition resize-none',
                 'rows': 3,
                 'cols': 40,
-                'placeholder': 'Type your address'
+                'placeholder': 'Type your address',
+                'maxlength': '500'
             }),
-            'designation': forms.Select(attrs={
-                'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 bg-white text-base'
+            'designation': forms.TextInput(attrs={
+                'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition',
+                'placeholder': 'Enter designation (no numbers)',
+                'maxlength': '100'
             })
         }
     
@@ -194,15 +199,20 @@ class PrincipalForm(forms.ModelForm):
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition resize-none',
                 'rows': 3,
                 'cols': 40,
-                'placeholder': 'Type your address'
+                'placeholder': 'Type your address',
+                'maxlength': '500'
             }),
             'room_number': forms.TextInput(attrs={
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition',
-                'placeholder': 'Eg: 120A'
+                'placeholder': 'Eg: 1201',
+                'pattern': '[0-9]*',
+                'maxlength': '4'
             }),
             'building_number': forms.TextInput(attrs={
                 'class': 'rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 px-4 py-2 text-base bg-white outline-none transition',
-                'placeholder': 'Eg: B2'
+                'placeholder': 'Eg: 2',
+                'pattern': '[0-9]*',
+                'maxlength': '4'
             })
         }
     
