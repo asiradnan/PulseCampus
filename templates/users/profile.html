@@ -1,12 +1,389 @@
 {% extends 'base.html' %}
-{% block title %} Profile  {% endblock %}
-{% block content %}
-<h1>Profile</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ user_form.as_p }}
-    <input type="submit" value="Submit">
-</form> 
+{% load static %}
 
+{% block title %}Profile Settings{% endblock %}
+
+{% block content %}
+<div class="bg-[#f5f7fa] min-h-screen">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        <div id="profile-header" class="mb-6 sm:mb-8">
+            <h1 class="text-xl sm:text-2xl font-bold text-slate-800">Profile Settings</h1>
+            <p class="text-sm sm:text-base text-slate-600 mt-1">Manage your account information and preferences</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            <!-- Profile Sidebar -->
+            <div id="profile-sidebar" class="lg:col-span-1">
+                <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                    <div class="flex flex-col items-center text-center mb-4 sm:mb-6">
+                        <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg{% endif %}" 
+                             class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-blue-600 mb-3 sm:mb-4">
+                        <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ user.get_full_name|default:user.username }}</h2>
+                        <p class="text-sm sm:text-base text-slate-600">
+                            {% if user.student %}
+                                Student, {{ user.student.student_class|default:"No Class Assigned" }}
+                            {% elif user.teacher %}
+                                {{ user.teacher.designation|default:"Teacher" }}, {{ user.teacher.department }}
+                            {% elif user.principal %}
+                                {{ user.principal.designation }}
+                            {% else %}
+                                User
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="space-y-2">
+                        <div id="personal-info-tab" class="tab-button flex items-center gap-3 p-3 bg-blue-50 text-blue-700 rounded-lg font-medium cursor-pointer active">
+                            <i class="fas fa-user w-5"></i>
+                            <span>Personal Info</span>
+                        </div>
+                        <div id="security-tab" class="tab-button flex items-center gap-3 p-3 hover:bg-slate-50 rounded-lg cursor-pointer">
+                            <i class="fas fa-lock w-5 text-slate-600"></i>
+                            <span>Security</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Content -->
+            <div id="profile-content" class="lg:col-span-2 space-y-4 sm:space-y-6">
+                <!-- Personal Information Tab -->
+                <div id="personal-info-content" class="tab-content">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- Personal Information -->
+                        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                            <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">Personal Information</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">First Name</label>
+                                    {{ form.first_name }}
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Last Name</label>
+                                    {{ form.last_name }}
+                                </div>
+                                <div class="space-y-2 sm:col-span-2">
+                                    <label class="text-sm font-medium text-slate-700">Username</label>
+                                    {{ form.username }}
+                                </div>
+                                <div class="space-y-2 sm:col-span-2">
+                                    <label class="text-sm font-medium text-slate-700">Email Address</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Role Specific Information -->
+                        {% if user.student %}
+                        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                            <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">Student Information</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Student ID</label>
+                                    {{ form.student_id }}
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Class</label>
+                                    {{ form.student_class }}
+                                </div>
+                                {% if user.student.is_captain %}
+                                <div class="space-y-2 sm:col-span-2">
+                                    <div class="flex items-center gap-2 p-3 bg-green-50 text-green-700 rounded-lg">
+                                        <i class="fas fa-star"></i>
+                                        <span class="font-medium">Class Captain</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% elif user.teacher %}
+                        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                            <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">Teacher Information</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Department</label>
+                                    {{ form.department }}
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Designation</label>
+                                    {{ form.designation }}
+                                </div>
+                                <div class="space-y-2 sm:col-span-2">
+                                    <label class="text-sm font-medium text-slate-700">Joining Date</label>
+                                    {{ form.joining_date }}
+                                </div>
+                            </div>
+                        </div>
+                        {% elif user.principal %}
+                        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                            <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">Principal Information</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Designation</label>
+                                    {{ form.designation }}
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Joining Date</label>
+                                    {{ form.joining_date }}
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Room Number</label>
+                                    {{ form.room_number }}
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Building Number</label>
+                                    {{ form.building_number }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <!-- Address Information -->
+                        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                            <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">Address Information</h3>
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-slate-700">Address</label>
+                                {{ form.address }}
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition w-full sm:w-auto">
+                                Save Changes
+                            </button>
+                            <a href="{% url 'homepage' %}" class="bg-slate-100 hover:bg-slate-200 text-slate-600 px-6 py-2 rounded-lg font-medium transition inline-block text-center w-full sm:w-auto">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Security Tab -->
+                <div id="security-content" class="tab-content hidden">
+                    <!-- Change Password Section -->
+                    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
+                        <h3 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 sm:mb-6">Change Password</h3>
+                        <form id="password-form" method="post" action="{% url 'users:change_password' %}">
+                            {% csrf_token %}
+                            <div class="space-y-4 sm:space-y-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Current Password</label>
+                                    <input type="password" name="old_password" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">New Password</label>
+                                    <input type="password" name="new_password1" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                    <p class="text-xs text-slate-500">Password must be at least 8 characters long and contain a mix of letters and numbers.</p>
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-slate-700">Confirm New Password</label>
+                                    <input type="password" name="new_password2" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                                </div>
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition w-full sm:w-auto">
+                                    Update Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>                                   
+                    
+                    <!-- Account Deletion Section -->
+                    <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 border-l-4 border-red-500">
+                        <h3 class="text-base sm:text-lg font-semibold text-red-800 mb-4 sm:mb-6">Danger Zone</h3>
+                        <div class="space-y-4">
+                            <div class="p-4 bg-red-50 rounded-lg">
+                                <p class="text-sm text-red-700 mb-3">
+                                    <strong>Delete Account:</strong> Once you delete your account, there is no going back. Please be certain.
+                                </p>
+                                <button type="button" onclick="confirmAccountDeletion()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition text-sm w-full sm:w-auto">
+                                    Delete My Account
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+    /* Style form inputs to match the design */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"],
+    input[type="date"],
+    select, 
+    textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgb(203 213 225);
+        outline: none;
+        transition: all 0.15s ease;
+        font-size: 0.875rem;
+    }
+    
+    input[type="text"]:focus, 
+    input[type="email"]:focus, 
+    input[type="password"]:focus,
+    input[type="date"]:focus,
+    select:focus, 
+    textarea:focus {
+        border-color: rgb(59 130 246);
+        box-shadow: 0 0 0 2px rgb(191 219 254);
+    }
+    
+    textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    
+    /* Tab styling */
+    .tab-button {
+        transition: all 0.15s ease;
+    }
+    
+    .tab-button.active {
+        background-color: rgb(239 246 255);
+        color: rgb(29 78 216);
+    }
+    
+    .tab-button:not(.active):hover {
+        background-color: rgb(248 250 252);
+    }
+    
+    .tab-button:not(.active) i {
+        color: rgb(71 85 105);
+    }
+    
+    .tab-content {
+        display: block;
+    }
+    
+    .tab-content.hidden {
+        display: none;
+    }
+    
+    /* Error styling */
+    .errorlist {
+        color: rgb(239 68 68);
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        list-style: none;
+        padding: 0;
+    }
+    
+    .errorlist li {
+        margin-bottom: 0.25rem;
+    }
+    
+    /* Field errors */
+    input.error, select.error, textarea.error {
+        border-color: rgb(239 68 68);
+    }
+    
+    /* Mobile responsive adjustments */
+    @media (max-width: 640px) {
+        .grid.grid-cols-1.sm\\:grid-cols-2 {
+            grid-template-columns: 1fr;
+        }
+        
+        .flex.flex-col.sm\\:flex-row {
+            flex-direction: column;
+        }
+        
+        .w-full.sm\\:w-auto {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    // Tab switching functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const personalInfoTab = document.getElementById('personal-info-tab');
+        const securityTab = document.getElementById('security-tab');
+        const personalInfoContent = document.getElementById('personal-info-content');
+        const securityContent = document.getElementById('security-content');
+        
+        personalInfoTab.addEventListener('click', function() {
+            // Switch to personal info tab
+            personalInfoTab.classList.add('active', 'bg-blue-50', 'text-blue-700');
+            personalInfoTab.classList.remove('hover:bg-slate-50');
+            securityTab.classList.remove('active', 'bg-blue-50', 'text-blue-700');
+            securityTab.classList.add('hover:bg-slate-50');
+            
+            // Update icon colors
+            personalInfoTab.querySelector('i').classList.remove('text-slate-600');
+            securityTab.querySelector('i').classList.add('text-slate-600');
+            
+            // Show/hide content
+            personalInfoContent.classList.remove('hidden');
+            securityContent.classList.add('hidden');
+        });
+        
+        securityTab.addEventListener('click', function() {
+            // Switch to security tab
+            securityTab.classList.add('active', 'bg-blue-50', 'text-blue-700');
+            securityTab.classList.remove('hover:bg-slate-50');
+            personalInfoTab.classList.remove('active', 'bg-blue-50', 'text-blue-700');
+            personalInfoTab.classList.add('hover:bg-slate-50');
+            
+            // Update icon colors
+            securityTab.querySelector('i').classList.remove('text-slate-600');
+            personalInfoTab.querySelector('i').classList.add('text-slate-600');
+            
+            // Show/hide content
+            securityContent.classList.remove('hidden');
+            personalInfoContent.classList.add('hidden');
+        });
+        
+        // Add error styling to fields with errors
+        const errorLists = document.querySelectorAll('.errorlist');
+        errorLists.forEach(function(errorList) {
+            const field = errorList.previousElementSibling;
+            if (field && (field.tagName === 'INPUT' || field.tagName === 'SELECT' || field.tagName === 'TEXTAREA')) {
+                field.classList.add('error');
+            }
+        });
+        
+        // Password confirmation validation
+        const passwordForm = document.getElementById('password-form');
+        if (passwordForm) {
+            passwordForm.addEventListener('submit', function(e) {
+                const newPassword1 = document.querySelector('input[name="new_password1"]').value;
+                const newPassword2 = document.querySelector('input[name="new_password2"]').value;
+                
+                if (newPassword1 !== newPassword2) {
+                    e.preventDefault();
+                    alert('New passwords do not match. Please try again.');
+                    return false;
+                }
+                
+                if (newPassword1.length < 8) {
+                    e.preventDefault();
+                    alert('Password must be at least 8 characters long.');
+                    return false;
+                }
+            });
+        }
+    });
+    
+    // Account deletion confirmation
+    function confirmAccountDeletion() {
+        if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone.')) {
+            if (confirm('This will permanently delete all your data. Type "DELETE" to confirm.')) {
+                const userInput = prompt('Please type "DELETE" to confirm account deletion:');
+                if (userInput === 'DELETE') {
+                    // Redirect to account deletion endpoint
+                    window.location.href = '{% url "users:delete_account" %}';
+                } else {
+                    alert('Account deletion cancelled.');
+                }
+            }
+        }
+    };
+</script>
 {% endblock %}
