@@ -3,20 +3,105 @@
 {% block title %}Notices{% endblock %}
 
 {% block content %}
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-2xl font-bold text-blue-800 mb-1">Notices</h1>
+        <p class="text-slate-500 text-sm">Latest announcements and updates from departments</p>
+    </div>
+    {% if user.is_authenticated %}
+    <a href="{% url 'notice:notice_create' %}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+        <i class="fa-solid fa-plus"></i> New Notice
+    </a>
+    {% endif %}
+</div>
 
-{% if user.is_authenticated %}
-<a href="{% url 'notice:notice_create' %}">Publish Notice</a>
-{% endif %}
 {% if notice_list %}
+<div class="space-y-5">
     {% for notice in notice_list %}
-        <a href="{%url 'notice:notice_detail' pk=notice.pk %}">{{ notice }}</a><br>
-        {{ notice.content }}
-        {% if notice.pdf_file %}
-        <a href="{{ notice.pdf_file.url }}" target="_blank">Download Notice</a>
-        {% endif %}
+    <div class="bg-white rounded-2xl shadow group hover:shadow-lg transition p-6">
+        <div class="flex items-start gap-3 mb-3">
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-9 h-9 rounded-full flex-shrink-0">
+            <div class="flex-1 min-w-0">
+                <div class="text-sm font-medium text-slate-800">{{ notice.author|default:"Admin" }}</div>
+                <div class="text-xs text-slate-500">{{ notice.author.profile.designation|default:"Administrator" }}</div>
+            </div>
+        </div>
+        
+        <a href="{% url 'notice:notice_detail' pk=notice.pk %}" 
+           class="block text-lg font-semibold text-blue-800 mb-2 group-hover:underline transition cursor-pointer">
+            {{ notice.title }}
+        </a>
+        
+        <div class="prose max-w-none text-slate-700 text-sm line-clamp-2 mb-3">
+            {{ notice.content|truncatewords:30 }}
+        </div>
+        
+        <div class="flex items-center gap-4 text-xs text-slate-500 mb-4">
+            <div class="flex items-center gap-1">
+                <i class="far fa-calendar"></i>
+                <span>{{ notice.date|date:"M d, Y" }}</span>
+            </div>
+            <div class="flex items-center gap-1">
+                {% if notice.pdf_file %}
+                    <i class="fas fa-file-pdf text-red-600"></i>
+                    <span>PDF Attached</span>
+                {% else %}
+                    <i class="fas fa-file-pdf text-red-600 opacity-50"></i>
+                    <span>No Attachment</span>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Action buttons - better mobile layout -->
+        <div class="flex items-center justify-between gap-3 pt-3 border-t border-slate-100">
+            <a href="{% url 'notice:notice_detail' pk=notice.pk %}" 
+               class="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center py-2.5 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition sm:flex-none sm:bg-transparent sm:text-blue-600 sm:hover:text-blue-800 sm:hover:bg-transparent sm:py-0 sm:px-0">
+                <span>View Details</span>
+                <i class="fas fa-arrow-right"></i>
+            </a>
+            {% if notice.pdf_file %}
+            <a href="{{ notice.pdf_file.url }}" target="_blank"
+               class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 text-center py-2.5 px-4 rounded-lg font-medium flex items-center justify-center gap-2 transition sm:flex-none sm:bg-transparent sm:text-slate-600 sm:hover:text-blue-600 sm:hover:bg-transparent sm:py-0 sm:px-0">
+                <i class="fas fa-download"></i>
+                <span>Download</span>
+            </a>
+            {% endif %}
+        </div>
+    </div>
     {% endfor %}
-{% else %}
-<p>There are no notices.</p>
-{% endif %}
+</div>
 
+<!-- Pagination Section -->
+<div class="flex items-center justify-between mt-10">
+    <button class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm font-medium px-4 py-2 rounded-lg">
+        <i class="fas fa-arrow-left"></i>
+        Previous
+    </button>
+    <div class="flex items-center gap-2">
+        <button class="w-8 h-8 rounded-lg bg-blue-600 text-white font-semibold">1</button>
+        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50">2</button>
+        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50">3</button>
+        <span class="text-slate-400 px-2">...</span>
+        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50">6</button>
+    </div>
+    <button class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm font-medium px-4 py-2 rounded-lg">
+        Next
+        <i class="fas fa-arrow-right"></i>
+    </button>
+</div>
+
+{% else %}
+<div class="text-center py-12">
+    <i class="fas fa-bullhorn text-6xl text-slate-300 mb-4"></i>
+    <h3 class="text-xl font-semibold text-slate-600 mb-2">No Notices Found</h3>
+    <p class="text-slate-500 mb-6">There are no notices available at the moment.</p>
+    <!-- {% if user.is_authenticated %}
+    <a href="{% url 'notice:notice_create' %}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center gap-2 transition">
+        <i class="fa-solid fa-plus"></i> Publish First Notice
+    </a>
+    {% endif %} -->
+</div>
+{% endif %}
 {% endblock %}
