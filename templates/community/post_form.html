@@ -1,9 +1,223 @@
 {% extends 'base.html' %}
-{% block title %}Create Post{% endblock %}
+
+{% block title %}
+    {% if request.resolver_match.url_name == 'post_create' %}
+        New Post
+    {% else %}
+        Update Post
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create</button>
-</form>
+
+<section id="post-form-section"
+    class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[600px] lg:min-h-[700px]">
+    <!-- Left static content -->
+    <div id="post-left-static"
+        class="w-full lg:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 to-purple-400 px-6 sm:px-10 py-8 sm:py-14 lg:py-0 relative order-2 lg:order-1">
+        <!-- Logo/Brand - Hidden on mobile, shown on larger screens -->
+        <div class="absolute top-4 sm:top-6 left-4 sm:left-8 flex gap-2 items-center hidden sm:flex">
+            <i class="fa-solid fa-graduation-cap text-white text-xl sm:text-2xl"></i>
+            <span class="text-white font-bold text-base sm:text-lg tracking-wide">PulseCampus</span>
+        </div>
+
+        <div class="flex flex-col items-center mt-4 sm:mt-10 lg:mt-0 text-center">
+            <!-- Mobile-optimized heading -->
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
+                <span class="block sm:hidden">
+                    {% if request.resolver_match.url_name == 'post_create' %}
+                        Create Post
+                    {% else %}
+                        Update Post
+                    {% endif %}
+                </span>
+                <span class="hidden sm:block">
+                    {% if request.resolver_match.url_name == 'post_create' %}
+                        Share Your Thoughts
+                    {% else %}
+                        Update Your Post
+                    {% endif %}
+                </span>
+            </h2>
+
+            <!-- Mobile-optimized description -->
+            <p class="text-white/90 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-xs sm:max-w-md text-center leading-relaxed">
+                <span class="block sm:hidden">
+                    {% if request.resolver_match.url_name == 'post_create' %}
+                        Share ideas, discussions, and connect with your community.
+                    {% else %}
+                        Keep your post content current and engaging.
+                    {% endif %}
+                </span>
+                <span class="hidden sm:block">
+                    {% if request.resolver_match.url_name == 'post_create' %}
+                        Create engaging posts to share ideas, start discussions, and connect with your campus community. Add images to make your posts more engaging.
+                    {% else %}
+                        Update your post to keep the content fresh and relevant for the campus community.
+                    {% endif %}
+                </span>
+            </p>
+
+            <!-- Image - smaller on mobile -->
+            <div class="flex justify-center">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/078892bb26-49e2e096663dd3af8319.png"
+                    class="rounded-xl shadow-xl w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 object-cover opacity-90"
+                    alt="community post illustration" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div id="post-right-panel"
+        class="w-full lg:w-1/2 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-14 order-1 lg:order-2">
+        
+        <div class="w-full max-w-sm sm:max-w-md mx-auto">
+            <!-- Mobile logo (shown only on small screens) -->
+            <div class="flex justify-center items-center gap-2 mb-6 sm:hidden">
+                <i class="fa-solid fa-graduation-cap text-purple-600 text-2xl"></i>
+                <span class="text-purple-800 font-bold text-xl tracking-wide">PulseCampus</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-bold text-purple-800 mb-2 text-center">
+                {% if request.resolver_match.url_name == 'post_create' %}
+                    New Post
+                {% else %}
+                    Update Post
+                {% endif %}
+            </h3>
+            <p class="text-slate-600 mb-6 sm:mb-8 text-center text-sm sm:text-base">
+                {% if request.resolver_match.url_name == 'post_create' %}
+                    Share your thoughts with the community
+                {% else %}
+                    Update your post information
+                {% endif %}
+            </p>
+            
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Post Title Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-heading text-purple-600 mr-2"></i>Post Title
+                    </label>
+                    {{ form.title }}
+                    {% if form.title.errors %}
+                        <div class="text-red-500 text-xs mt-1">
+                            {% for error in form.title.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Post Content Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.content.id_for_label }}" class="block text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-align-left text-purple-600 mr-2"></i>Content
+                    </label>
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                        <div class="text-red-500 text-xs mt-1">
+                            {% for error in form.content.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Image Field -->
+                {% if form.image %}
+                <div class="space-y-2">
+                    <label for="{{ form.image.id_for_label }}" class="block text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-image text-purple-600 mr-2"></i>Image (Optional)
+                    </label>
+                    {{ form.image }}
+                    {% if form.image.errors %}
+                        <div class="text-red-500 text-xs mt-1">
+                            {% for error in form.image.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="text-xs text-slate-500">Upload an image to make your post more engaging (max 2MB)</p>
+                </div>
+                {% endif %}
+
+                <!-- Submit Button -->
+                <button type="submit" 
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    {% if request.resolver_match.url_name == 'post_create' %}
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Create Post
+                    {% else %}
+                        <i class="fa-solid fa-save"></i>
+                        Update Post
+                    {% endif %}
+                </button>
+            </form>
+            
+            <div class="mt-8 sm:mt-10 text-center">
+                <a href="{% url 'community:post_list' %}" class="text-purple-600 font-semibold hover:underline transition cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Community
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Custom form field styling */
+    input[type="text"], input[type="file"], textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        background-color: #f8fafc;
+        font-family: inherit;
+    }
+    
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+    
+    input[type="text"]:focus, input[type="file"]:focus, textarea:focus {
+        outline: none;
+        border-color: #9333ea;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+    }
+    
+    input[type="text"]:hover, input[type="file"]:hover, textarea:hover {
+        border-color: #cbd5e1;
+        background-color: white;
+    }
+
+    /* File input styling */
+    input[type="file"] {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    input[type="file"]::-webkit-file-upload-button {
+        background: #9333ea;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin-right: 12px;
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    input[type="file"]::-webkit-file-upload-button:hover {
+        background: #7c3aed;
+    }
+</style>
+
 {% endblock %}

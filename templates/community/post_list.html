@@ -3,19 +3,76 @@
 {% block title %}Community{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-<a href="{% url 'community:post_create' %}">Create Post</a>
-{% endif %}
-{% if post_list %}
-    {% for post in post_list %}
-    <a href="{%url 'community:post_detail' pk=post.pk %}">{{ post }}</a><br>
-    {{ post.content }}
-    {% if post.image %} 
-    <img src="{{ post.image.url }}" alt="{{ post.title }}" width="200">
+<div class="flex justify-between items-center mb-8">
+    <h1 class="text-2xl font-bold text-blue-800">Community Forum</h1>
+    {% if user.is_authenticated %}
+    <a href="{% url 'community:post_create' %}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+        <i class="fa-solid fa-plus"></i> New Post
+    </a>
     {% endif %}
-    {% endfor %}
-{% else %}
-<p>There are no posts.</p>
-{% endif %}
+</div>
 
+{% if post_list %}
+<div class="space-y-6">
+    {% for post in post_list %}
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex items-start justify-between mb-4">
+            <div class="flex items-center gap-3">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" class="w-10 h-10 rounded-full" alt="User Avatar">
+                <div>
+                    <div class="font-semibold text-slate-800">{{ post.posted_by.first_name}} {{ post.posted_by.last_name}}</div>
+                    <div class="text-sm text-slate-500">Posted {{ post.time|timesince }} ago</div>
+                </div>
+            </div>
+            <div class="text-slate-400">
+                <i class="fa-solid fa-ellipsis"></i>
+            </div>
+        </div>
+        
+        <a href="{% url 'community:post_detail' pk=post.pk %}" class="block">
+            <h2 class="text-xl font-semibold text-slate-800 mb-3 hover:text-blue-600 transition">{{ post.title }}</h2>
+        </a>
+        
+        <p class="text-slate-600 mb-4">{{ post.content|truncatewords:30 }}</p>
+        
+        {% if post.image %}
+        <img src="{{ post.image.url }}" alt="{{ post.title }}" class="w-full h-64 object-cover rounded-lg mb-4">
+        {% endif %}
+        
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <button class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition">
+                    <i class="fa-solid fa-arrow-up"></i>
+                    <span>0</span>
+                </button>
+                <button class="flex items-center gap-2 text-slate-600 hover:text-red-600 transition">
+                    <i class="fa-solid fa-arrow-down"></i>
+                    <span>0</span>
+                </button>
+                <a href="{% url 'community:post_detail' pk=post.pk %}" class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition">
+                    <i class="fa-regular fa-comment"></i>
+                    <span>Comments</span>
+                </a>
+            </div>
+            <button class="text-blue-600 hover:text-blue-700 transition">
+                <i class="fa-regular fa-bookmark"></i>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-12">
+    <i class="fa-solid fa-comments text-6xl text-slate-300 mb-4"></i>
+    <h3 class="text-xl font-semibold text-slate-600 mb-2">No Posts Found</h3>
+    <p class="text-slate-500 mb-6">There are no posts in the community forum yet.</p>
+    <!-- {% if user.is_authenticated %}
+    <a href="{% url 'community:post_create' %}"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg inline-flex items-center gap-2 transition">
+        <i class="fa-solid fa-plus"></i> Create First Post
+    </a>
+    {% endif %} -->
+</div>
+{% endif %}
 {% endblock %}
