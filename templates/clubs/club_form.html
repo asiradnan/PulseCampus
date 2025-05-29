@@ -1,18 +1,192 @@
-{% extends 'base.html' %}
-{% block title %}  Create New Club {% endblock %}
+{% extends 'auth_base.html' %}
+
+{% block title %}
+    {% if request.resolver_match.url_name == 'club_create' %}
+        Create New Club
+    {% else %}
+        Update Club
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">
-            {% if request.resolver_match.url_name == 'club_create' %}
-            Create
-            {% else %}
-            Update
-            {% endif %}
-        </button>
-    </form>
+
+<section id="club-form-section"
+    class="flex flex-col lg:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden min-h-[600px] lg:min-h-[700px]">
+    <!-- Left static content -->
+    <div id="club-left-static"
+        class="w-full lg:w-1/2 flex flex-col justify-center items-center bg-gradient-to-br from-purple-600 to-purple-400 px-6 sm:px-10 py-8 sm:py-14 lg:py-0 relative order-2 lg:order-1">
+        <!-- Logo/Brand - Hidden on mobile, shown on larger screens -->
+        <div class="absolute top-4 sm:top-6 left-4 sm:left-8 flex gap-2 items-center hidden sm:flex">
+            <i class="fa-solid fa-graduation-cap text-white text-xl sm:text-2xl"></i>
+            <span class="text-white font-bold text-base sm:text-lg tracking-wide">PulseCampus</span>
+        </div>
+
+        <div class="flex flex-col items-center mt-4 sm:mt-10 lg:mt-0 text-center">
+            <!-- Mobile-optimized heading -->
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-white mb-3 sm:mb-4 leading-tight">
+                <span class="block sm:hidden">
+                    {% if request.resolver_match.url_name == 'club_create' %}
+                        Create Your Club
+                    {% else %}
+                        Update Club Info
+                    {% endif %}
+                </span>
+                <span class="hidden sm:block">
+                    {% if request.resolver_match.url_name == 'club_create' %}
+                        Build Your Campus Community
+                    {% else %}
+                        Update Your Club Details
+                    {% endif %}
+                </span>
+            </h2>
+
+            <!-- Mobile-optimized description -->
+            <p class="text-white/90 text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 max-w-xs sm:max-w-md text-center leading-relaxed">
+                <span class="block sm:hidden">
+                    {% if request.resolver_match.url_name == 'club_create' %}
+                        Start a new club and bring students together around shared interests.
+                    {% else %}
+                        Keep your club information current and engaging.
+                    {% endif %}
+                </span>
+                <span class="hidden sm:block">
+                    {% if request.resolver_match.url_name == 'club_create' %}
+                        Create a vibrant community space where students can connect, collaborate, and pursue their passions together. Your club will be a hub for meaningful campus engagement.
+                    {% else %}
+                        Keep your club information up-to-date to maintain an active and engaging community for all members.
+                    {% endif %}
+                </span>
+            </p>
+
+            <!-- Club-related icons and visual elements -->
+            <!-- <div class="flex justify-center mb-6">
+                <div class="grid grid-cols-3 gap-4 sm:gap-6">
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                        <i class="fa-solid fa-people-group text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                        <i class="fa-solid fa-calendar-days text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-sm rounded-xl p-3 sm:p-4 flex items-center justify-center">
+                        <i class="fa-solid fa-trophy text-white text-xl sm:text-2xl"></i>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Image - smaller on mobile -->
+            <div class="flex justify-center">
+                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/078892bb26-49e2e096663dd3af8319.png"
+                    class="rounded-xl shadow-xl w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 object-cover opacity-90"
+                    alt="club management illustration" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Right form panel -->
+    <div id="club-right-panel"
+        class="w-full lg:w-1/2 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-14 order-1 lg:order-2">
+        
+        <div class="w-full max-w-sm sm:max-w-md mx-auto">
+            <!-- Mobile logo (shown only on small screens) -->
+            <div class="flex justify-center items-center gap-2 mb-6 sm:hidden">
+                <i class="fa-solid fa-graduation-cap text-purple-600 text-2xl"></i>
+                <span class="text-purple-800 font-bold text-xl tracking-wide">PulseCampus</span>
+            </div>
+            
+            <h3 class="text-2xl sm:text-3xl font-bold text-purple-800 mb-2 text-center">
+                {% if request.resolver_match.url_name == 'club_create' %}
+                    Create New Club
+                {% else %}
+                    Update Club
+                {% endif %}
+            </h3>
+            <p class="text-slate-600 mb-6 sm:mb-8 text-center text-sm sm:text-base">
+                {% if request.resolver_match.url_name == 'club_create' %}
+                    Fill in the details to establish your new campus club
+                {% else %}
+                    Update your club information to keep it current
+                {% endif %}
+            </p>
+            
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                <!-- Club Name Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.club_name.id_for_label }}" class="block text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-people-group text-purple-600 mr-2"></i>Club Name
+                    </label>
+                    {{ form.club_name }}
+                    {% if form.club_name.errors %}
+                        <div class="text-red-500 text-xs mt-1">
+                            {% for error in form.club_name.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Established Date Field -->
+                <div class="space-y-2">
+                    <label for="{{ form.established.id_for_label }}" class="block text-sm font-semibold text-slate-700">
+                        <i class="fa-solid fa-calendar-days text-purple-600 mr-2"></i>Established Date
+                    </label>
+                    {{ form.established }}
+                    {% if form.established.errors %}
+                        <div class="text-red-500 text-xs mt-1">
+                            {% for error in form.established.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" 
+                    class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-xl transition duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                    {% if request.resolver_match.url_name == 'club_create' %}
+                        <i class="fa-solid fa-plus"></i>
+                        Create Club
+                    {% else %}
+                        <i class="fa-solid fa-save"></i>
+                        Update Club
+                    {% endif %}
+                </button>
+            </form>
+            
+            <div class="mt-8 sm:mt-10 text-center">
+                <a href="{% url 'clubs:club_list' %}" class="text-purple-600 font-semibold hover:underline transition cursor-pointer text-xs sm:text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back to Clubs
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* Custom form field styling */
+    input[type="text"], input[type="date"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 14px;
+        transition: all 0.2s ease;
+        background-color: #f8fafc;
+    }
     
-</body>
-</html>
-{% endblock %}  
+    input[type="text"]:focus, input[type="date"]:focus {
+        outline: none;
+        border-color: #9333ea;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+    }
+    
+    input[type="text"]:hover, input[type="date"]:hover {
+        border-color: #cbd5e1;
+        background-color: white;
+    }
+</style>
+
+{% endblock %}
