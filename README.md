@@ -14,9 +14,9 @@
 - Comments on Forum posts by users
 - Manage and update profile, email verifications, password reset
 
-## Roadmap
-
-- [ ] Writing tests for users/views
-- [ ] Tests for community/views
-- [ ] Tests for validators
+## Todo
+Vies to create: 
+- change_password
+- send_verification_email
+- delete_account
 
