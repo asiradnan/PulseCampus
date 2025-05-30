@@ -34,16 +34,6 @@
                 </button>
             </form>
             
-            {% if messages %}
-                <div class="mt-4">
-                    {% for message in messages %}
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-2">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-            
             <div class="mt-6 text-center">
                 <a href="{% url 'users:forgot_password' %}" class="text-blue-600 hover:underline transition text-sm">
                     Forgot Password?
