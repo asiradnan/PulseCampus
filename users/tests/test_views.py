@@ -290,4 +290,22 @@ class UsersViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/forgot_password.html')
 
+    def test_password_change_view(self):
+        form_data = {
+            'old_password': 'pass1234',
+            'new_password': 'p1q2w3e4r',
+            'confirm_password': 'p1q2w3e4r'
+        }
+        loggedin = self.client.login(username='testuser', password='pass1234')
+        self.assertTrue(loggedin)
+        response = self.client.post(reverse('users:change_password'), data=form_data)
+        self.assertEqual(User.objects.get(username='testuser').check_password('p1q2w3e4r'), True)
+
+    def test_delete_account(self):
+        loggedin = self.client.login(username='testuser', password='pass1234')
+        self.assertTrue(loggedin)
+        response = self.client.get(reverse('users:delete_account'))
+        self.assertEqual(User.objects.count(), 0)
+
+
 
