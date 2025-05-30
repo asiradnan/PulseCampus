@@ -225,7 +225,31 @@ def profile(request):
     return render(request, 'users/profile.html', {'form': form})
 
 def change_password(request):
-    pass
+    if request.method == 'POST':
+        old_password = request.POST.get('old_password')
+        new_password = request.POST.get('new_password')
+        confirm_password = request.POST.get('confirm_password')
+        user = request.user
+        if not user.check_password(old_password):
+            messages.error(request, "Old password is incorrect.")
+            return redirect('users:profile')
+        if new_password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return redirect('users:profile')
+        try:
+            validate_password(new_password)
+        except ValidationError as e:
+            messages.error(request, e.messages[0])
+            return redirect('users:profile')
+        user.set_password(new_password)
+        user.save()
+        messages.success(request, "Password changed successfully!")
+        return redirect('users:profile')
+    return redirect('users:profile')
     
+
 def delete_account(request):
-    pass
+    user = request.user
+    user.delete()
+    messages.success(request, "Account deleted successfully!")
+    return redirect('users:login')
