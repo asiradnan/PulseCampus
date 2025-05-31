@@ -26,6 +26,15 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;500;600;700;800;900&amp;display=swap" />
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
+
         .highlighted-section {
             outline: 2px solid #3F20FB;
             background-color: rgba(63, 32, 251, 0.1);
@@ -34,10 +43,6 @@
         .edit-button {
             position: absolute;
             z-index: 1000;
-        }
-
-        ::-webkit-scrollbar {
-            display: none;
         }
 
         html,
@@ -51,11 +56,27 @@
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
         }
+
+        /* Message alert styles */
+        .message-alert {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        /* Responsive message positioning */
+        @media (max-width: 640px) {
+            #message-container {
+                right: 1rem;
+                left: 1rem;
+                max-width: none;
+            }
+        }
     </style>
+
 </head>
 
 <body>
@@ -114,8 +135,9 @@
             </div>
 
             <!-- Mobile Menu Button -->
-            <button class="lg:hidden flex items-center justify-center w-10 h-10 text-slate-700 hover:text-blue-700 transition" 
-                    id="mobile-menu-button">
+            <button
+                class="lg:hidden flex items-center justify-center w-10 h-10 text-slate-700 hover:text-blue-700 transition"
+                id="mobile-menu-button">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
         </div>
@@ -132,7 +154,7 @@
                     <i class="fa-solid fa-times text-xl"></i>
                 </button>
             </div>
-            
+
             <nav class="flex flex-col p-6 space-y-4">
                 <a href="{% url 'departments:department_list' %}"
                     class="flex items-center gap-3 {% if request.resolver_match.namespace == 'departments' %}text-blue-700 font-semibold{% else %}text-slate-700 font-medium{% endif %} hover:text-blue-700 transition py-2">
@@ -159,7 +181,8 @@
             <!-- Mobile User Menu -->
             <div class="border-t p-6 space-y-4">
                 {% if user.is_authenticated %}
-                <a href="{% url 'users:profile' %}" class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
+                <a href="{% url 'users:profile' %}"
+                    class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
                     <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
                         class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
                     Profile
@@ -169,7 +192,8 @@
                     <i class="fa-solid fa-sign-out-alt"></i> Logout
                 </a>
                 {% else %}
-                <a href="{% url 'users:login' %}" class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
+                <a href="{% url 'users:login' %}"
+                    class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
                     <i class="fa-solid fa-sign-in-alt"></i> Log In
                 </a>
                 <a href="{% url 'users:signup' %}"
@@ -181,16 +205,44 @@
         </div>
     </header>
 
-<main id="main-landing" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">        {% block content %}
+    <!-- Messages Section - Right side positioning with PulseCampus colors -->
+    {% if messages %}
+    <div class="fixed top-20 right-4 z-40 space-y-3 max-w-sm" id="message-container">
+        {% for message in messages %}
+        <div
+            class="message-alert rounded-xl shadow-lg p-4 flex items-start gap-3 transform transition-all duration-300 ease-in-out translate-x-full
+        {% if message.tags == 'success' %}bg-gradient-to-r from-green-500 to-green-400 text-white{% elif message.tags == 'error' %}bg-gradient-to-r from-red-500 to-red-400 text-white{% elif message.tags == 'warning' %}bg-gradient-to-r from-yellow-400 to-yellow-300 text-slate-800{% else %}bg-gradient-to-r from-blue-600 to-blue-400 text-white{% endif %}">
+
+            <div class="flex-shrink-0 mt-0.5">
+                {% if message.tags == 'success' %}
+                <i class="fa-solid fa-check-circle text-lg"></i>
+                {% elif message.tags == 'error' %}
+                <i class="fa-solid fa-exclamation-circle text-lg"></i>
+                {% elif message.tags == 'warning' %}
+                <i class="fa-solid fa-exclamation-triangle text-lg"></i>
+                {% else %}
+                <i class="fa-solid fa-info-circle text-lg"></i>
+                {% endif %}
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium leading-relaxed">{{ message }}</p>
+            </div>
+
+            <button onclick="this.parentElement.remove()"
+                class="flex-shrink-0 hover:opacity-70 transition-opacity ml-2">
+                <i class="fa-solid fa-times text-sm"></i>
+            </button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+
+    <main id="main-landing" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+        {% block content %}
         {% endblock %}
     </main>
-
-    {% for message in messages %}
-        {{message}}
-    {% endfor %}
-    <br>
-    <br>
-    <br>
 
     <footer id="footer" class="bg-blue-900 text-white px-6 py-8">
         <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-10">
@@ -206,7 +258,8 @@
                     class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'departments' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
                     <i class="fa-solid fa-building-columns"></i> Departments
                 </a>
-                <a href="{% url 'classes:class_list' %}"
+                <a href="{% url 'classes:class_list' %}" class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match
+                <a href=" {% url 'classes:class_list' %}"
                     class="hover:underline text-sm flex items-center gap-2 cursor-pointer transition {% if request.resolver_match.namespace == 'classes' %}text-blue-200 font-semibold{% else %}text-white font-normal{% endif %}">
                     <i class="fa-solid fa-chalkboard-teacher"></i> Classes
                 </a>
@@ -248,9 +301,10 @@
         </div>
     </footer>
 
-    <!-- JavaScript for mobile menu functionality -->
+    <!-- JavaScript for mobile menu and message functionality -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile menu functionality
             const mobileMenuButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
@@ -269,27 +323,43 @@
             }
 
             // Open mobile menu
-            mobileMenuButton.addEventListener('click', openMobileMenu);
+            if (mobileMenuButton) mobileMenuButton.addEventListener('click', openMobileMenu);
 
             // Close mobile menu
-            mobileMenuClose.addEventListener('click', closeMobileMenu);
-            mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            if (mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+            if (mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
 
-            // Close menu when clicking on a link (optional)
-            const mobileMenuLinks = mobileMenu.querySelectorAll('a');
-            mobileMenuLinks.forEach(link => {
+            // Close menu when clicking on a link
+            const mobileMenuLinks = mobileMenu?.querySelectorAll('a');
+            mobileMenuLinks?.forEach(link => {
                 link.addEventListener('click', closeMobileMenu);
             });
 
             // Close menu on escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && !mobileMenu.classList.contains('hidden')) {
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && mobileMenu && !mobileMenu.classList.contains('hidden')) {
                     closeMobileMenu();
                 }
             });
+
+            // Message alert functionality
+            const alerts = document.querySelectorAll('.message-alert');
+            alerts.forEach(function (alert, index) {
+                // Slide in animation
+                setTimeout(() => {
+                    alert.style.transform = 'translateX(0)';
+                    alert.style.opacity = '1';
+                }, index * 150);
+
+                // Auto-hide after 4 seconds
+                setTimeout(function () {
+                    alert.style.transform = 'translateX(100%)';
+                    alert.style.opacity = '0';
+                    setTimeout(() => alert.remove(), 300);
+                }, 4000 + (index * 150));
+            });
         });
     </script>
-
 </body>
 
 </html>
