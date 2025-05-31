@@ -10,7 +10,7 @@ class Student(models.Model):
     student_class=models.ForeignKey(Class,on_delete=models.SET_NULL,null=True)
     address=models.TextField(max_length=500)
     is_captain=models.BooleanField(default=False)
-    profile_pic=models.ImageField(upload_to='profile_pics',blank=True)
+    profile_pic=models.ImageField(upload_to='profile_pics',blank=True, default='profile_pics/default.png')
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -27,7 +27,7 @@ class Teacher(models.Model):
     joining_date=models.DateField(validators=[validators.no_future_date])
     address=models.TextField(max_length=500)
     designation=models.CharField(max_length=100,validators=[validators.no_digit])
-    profile_pic=models.ImageField(upload_to='profile_pics',blank=True)
+    profile_pic=models.ImageField(upload_to='profile_pics',blank=True, default='profile_pics/default.png')
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name
@@ -42,7 +42,7 @@ class Principal(models.Model):
     address=models.TextField(max_length=500)
     room_number=models.CharField(max_length=4,validators=[validators.all_digits])
     building_number=models.CharField(max_length=4,validators=[validators.all_digits])
-    profile_pic=models.ImageField(upload_to='profile_pics',blank=True)
+    profile_pic=models.ImageField(upload_to='profile_pics',blank=True, default='profile_pics/default.png')
 
     def __str__(self):
         return self.user.first_name + ' ' + self.user.last_name

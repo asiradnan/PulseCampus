@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 
 def login_view(request):
     if request.user.is_authenticated:
+        messages.info(request, 'You are already logged in.')
         return redirect('homepage')
     if request.method == 'POST':
         is_active = True
@@ -47,6 +48,9 @@ def logout_view(request):
     return redirect(request.GET.get('next', '/'))
 
 def signup(request):
+    if request.user.is_authenticated:
+        messages.info(request, 'You are already logged in.')
+        return redirect('homepage')
     return render(request,'users/signup.html')
 
 def _role_based_signup(request, form_class):
