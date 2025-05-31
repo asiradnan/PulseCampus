@@ -188,11 +188,16 @@
             <!-- Mobile User Menu -->
             <div class="border-t p-6 space-y-4">
                 {% if user.is_authenticated %}
-                <a href="{% url 'users:profile' %}"
-                    class="flex items-center gap-3 text-slate-700 font-medium hover:text-blue-700 transition py-2">
-                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg"
-                        class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
-                    Profile
+                <a href="{% url 'users:profile' %}" class="flex items-center gap-2">
+                    {% if user.student %}
+                                 <img src="{{ user.student.profile_pic.url }}" class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
+                            {% elif user.teacher %}
+                                <img src="{{ user.teacher.profile_pic.url }}" class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
+                            {% elif user.principal %}
+                               <img src="{{ user.principal.profile_pic.url }}" class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
+                        {% else %} <img src="{% static 'profile_pic/default.png' %}" class="w-8 h-8 rounded-full border-2 border-blue-600" alt="User Avatar" />
+                        {% endif %}
+                         Profile
                 </a>
                 <a href="{% url 'users:logout' %}?next={{request.path|urlencode}}"
                     class="flex items-center gap-3 text-slate-700 font-medium hover:text-red-600 transition py-2">
