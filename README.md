@@ -18,11 +18,10 @@
 - ~~Message~~
 - ~~Signup, login~~
 - ~~Email verification, password reset~~
-- Profile update all fields
-- Department CRUD
+- ~~Profile update all fields~~
 
 ### later
-- Class CRUD, captain update
+- Department CRUD, Class CRUD, captain update
 - Notice CRUD
 - Forrum CRUD + Comment CRUD
 - Clubs CRUD + Membership with promotion/change 
