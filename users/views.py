@@ -197,6 +197,8 @@ def profile(request):
             last_name = form.cleaned_data['last_name']
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
+            profile_pic = request.FILES.get('profile_pic')
+            print(profile_pic)
             user = request.user
             try:
                 with transaction.atomic():
@@ -206,6 +208,8 @@ def profile(request):
                     user.email = email
                     user.save()
                     form.save()
+                    profile.profile_pic = profile_pic
+                    profile.save()
                     messages.success(request, "Profile updated successfully!")
                     return redirect('users:profile')
             except Exception as e:
