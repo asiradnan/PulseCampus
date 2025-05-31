@@ -17,7 +17,7 @@
 ## Revise
 - ~~Message~~
 - ~~Signup, login~~
-- Email verification, password reset
+- ~~Email verification, password reset~~
 - Profile update all fields
 - Department CRUD
 
