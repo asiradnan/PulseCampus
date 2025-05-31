@@ -208,6 +208,8 @@ def profile(request):
                     user.email = email
                     user.save()
                     form.save()
+                    if profile_pic is None:
+                        profile_pic = 'profile_pics/default.png'
                     profile.profile_pic = profile_pic
                     profile.save()
                     messages.success(request, "Profile updated successfully!")
