@@ -14,9 +14,16 @@
 - Comments on Forum posts by users
 - Manage and update profile, email verifications, password reset
 
-## Todo
-Vies to create: 
-- change_password
-- send_verification_email
-- delete_account
+## Revise
+- ~~Message~~
+- ~~Signup, login~~
+- Email verification, password reset
+- Profile update all fields
+- Department CRUD
+
+### later
+- Class CRUD, captain update
+- Notice CRUD
+- Forrum CRUD + Comment CRUD
+- Clubs CRUD + Membership with promotion/change 
 
