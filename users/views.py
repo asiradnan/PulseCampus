@@ -32,7 +32,7 @@ def login_view(request):
                 is_active = user.is_active
             user = authenticate(request, username=username_or_email, password=password)
         if not is_active:
-            messages.error(request, 'Your account is not active. Please confirm your email.')   
+            messages.error(request, 'Please confirm your email first.')   
             return redirect('users:login')
         if user is None:
             messages.error(request, 'Invalid credentials.')
@@ -97,8 +97,7 @@ def _role_based_signup(request, form_class):
                     profile = form.save(commit=False)
                     profile.user = user
                     profile.save()  # This is where the role creation happens
-                    
-                    messages.success(request, "Account created successfully!")
+                    messages.success(request, "Account created successfully! Please click on the link in your email to verify your account.")
                     return redirect('users:login')
                     
             except Exception as e:
@@ -220,8 +219,6 @@ def profile(request):
         form = form_class(instance=profile, initial=user_data)
         form.fields.pop('password')
         form.fields.pop('confirm_password') 
-        # print(form)
-        # print(form_class)
     return render(request, 'users/profile.html', {'form': form})
 
 def change_password(request):
