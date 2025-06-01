@@ -17,6 +17,9 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         return reverse('community:post_detail', args=[str(self.pk)])   
+    
+    def get_vote_count(self):
+        return self.vote_set.filter(upvote=True).count() - self.vote_set.filter(downvote=True).count()
 
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
