@@ -39,7 +39,13 @@ def class_delete(request, pk):
 def toggle_captain(request, pk):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
-        student = Student.objects.get(student_id=student_id)
-        student.is_captain = not student.is_captain
-        student.save()
+        selected_student = Student.objects.get(student_id=student_id)
+        make_captain = not selected_student.is_captain
+        students_of_the_class = Student.objects.filter(student_class = selected_student.student_class)
+        for student in students_of_the_class:
+            if student == selected_student:
+                student.is_captain = make_captain
+            else:
+                student.is_captain = not make_captain
+            student.save()
     return redirect('classes:class_detail', pk=pk)
