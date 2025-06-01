@@ -22,7 +22,7 @@
 
 ### later
 - ~~Department CRUD, Class CRUD, captain update~~
-- Notice CRUD
-- Forrum CRUD + Comment CRUD
+- ~~Notice CRUD~~
+- ~~Forrum CRUD + Comment CRUD~~
 - ~~Clubs CRUD + Membership with promotion/change~~ 
 

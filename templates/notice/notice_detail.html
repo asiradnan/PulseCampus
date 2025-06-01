@@ -59,11 +59,13 @@
                         <div class="text-xs text-slate-500">PDF Document</div>
                     </div>
                 </div>
+                {% if notice.pdf_file %}
                 <a href="{{ notice.pdf_file.url }}" target="_blank" 
                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition flex items-center justify-center gap-2 w-full sm:w-auto">
                     <i class="fas fa-download"></i>
                     <span>Download</span>
                 </a>
+                {% endif %}
             </div>
         </div>
         {% endif %}
@@ -96,68 +98,9 @@
             <i class="fas fa-arrow-left"></i>
             <span>Back to Notices</span>
         </a>
-        
-        <!-- Action Buttons -->
-        <div class="flex items-center justify-center gap-4 sm:gap-3">
-            <button onclick="shareNotice()" 
-                    class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm py-2 px-3 rounded-lg hover:bg-slate-50">
-                <i class="fas fa-share"></i>
-                <span class="hidden sm:inline">Share</span>
-            </button>
-            
-            {% if notice.pdf_file %}
-            <button onclick="printPDF()" 
-                    class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm py-2 px-3 rounded-lg hover:bg-slate-50">
-                <i class="fas fa-print"></i>
-                <span class="hidden sm:inline">Print PDF</span>
-            </button>
-            {% endif %}
-        </div>
     </div>
 </main>
 
-<script>
-function shareNotice() {
-    if (navigator.share) {
-        navigator.share({
-            title: '{{ notice.title|escapejs }}',
-            text: '{{ notice.content|truncatewords:20|escapejs }}',
-            url: window.location.href
-        }).catch(console.error);
-    } else {
-        // Fallback: copy to clipboard
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            // Use a more mobile-friendly notification
-            if (window.innerWidth < 640) {
-                alert('Link copied!');
-            } else {
-                alert('Notice link copied to clipboard!');
-            }
-        }).catch(() => {
-            alert('Unable to copy link. Please copy the URL manually.');
-        });
-    }
-}
-
-function printPDF() {
-    const pdfUrl = '{{ notice.pdf_file.url }}';
-    
-    // Create a new window/tab with the PDF
-    const printWindow = window.open(pdfUrl, '_blank');
-    
-    // Wait for the PDF to load, then trigger print
-    if (printWindow) {
-        printWindow.onload = function() {
-            setTimeout(() => {
-                printWindow.print();
-            }, 1000); // Small delay to ensure PDF is fully loaded
-        };
-    } else {
-        // Fallback if popup is blocked
-        alert('Please allow popups to print the PDF, or use the download button to save and print manually.');
-    }
-}
-</script>
 
 <style>
 /* Enhanced mobile-specific styles */

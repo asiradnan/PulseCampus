@@ -73,23 +73,47 @@
 </div>
 
 <!-- Pagination Section -->
+{% if page_obj.paginator.num_pages > 1 %}
 <div class="flex items-center justify-between mt-10">
-    <button class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm font-medium px-4 py-2 rounded-lg">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm font-medium px-4 py-2 rounded-lg">
         <i class="fas fa-arrow-left"></i>
         Previous
-    </button>
+    </a>
+    {% else %}
+    <div></div>
+    {% endif %}
+    
     <div class="flex items-center gap-2">
-        <button class="w-8 h-8 rounded-lg bg-blue-600 text-white font-semibold">1</button>
-        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50">2</button>
-        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50">3</button>
-        <span class="text-slate-400 px-2">...</span>
-        <button class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50">6</button>
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="w-8 h-8 rounded-lg bg-blue-600 text-white font-semibold flex items-center justify-center">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                <a href="?page={{ num }}" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50 flex items-center justify-center">{{ num }}</a>
+            {% elif num == 1 %}
+                <a href="?page={{ num }}" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50 flex items-center justify-center">{{ num }}</a>
+                {% if page_obj.number > 4 %}
+                    <span class="text-slate-400 px-2">...</span>
+                {% endif %}
+            {% elif num == page_obj.paginator.num_pages %}
+                {% if page_obj.number < page_obj.paginator.num_pages|add:'-3' %}
+                    <span class="text-slate-400 px-2">...</span>
+                {% endif %}
+                <a href="?page={{ num }}" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 font-semibold hover:bg-blue-50 flex items-center justify-center">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
     </div>
-    <button class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm font-medium px-4 py-2 rounded-lg">
+    
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition text-sm font-medium px-4 py-2 rounded-lg">
         Next
         <i class="fas fa-arrow-right"></i>
-    </button>
+    </a>
+    {% else %}
+    <div></div>
+    {% endif %}
 </div>
+{% endif %}
 
 {% else %}
 <div class="text-center py-12">

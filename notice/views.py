@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 
 class NoticeListView(ListView):
     model = Notice
+    paginate_by = 3
 
 @method_decorator(ratelimit(key='ip', rate='30/d', block=True), name='post') 
 class NoticeCreateView(TeacherOrPrincipalRequiredMixin, CreateView):
