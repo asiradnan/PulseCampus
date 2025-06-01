@@ -21,7 +21,7 @@
 - ~~Profile update all fields~~
 
 ### later
-- Department CRUD, Class CRUD, captain update
+- ~~Department CRUD,~~ Class CRUD, captain update
 - Notice CRUD
 - Forrum CRUD + Comment CRUD
 - Clubs CRUD + Membership with promotion/change 

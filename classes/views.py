@@ -7,10 +7,12 @@ from django.contrib.auth.decorators import login_required
 from PulseCampus.mixins import is_principal
 from django.contrib import messages
 from users.models import Student
+from django.contrib.messages.views import SuccessMessageMixin
 
-class CreateClassView(PrincipalRequiredMixin,CreateView):
+class CreateClassView(PrincipalRequiredMixin,SuccessMessageMixin, CreateView):
     model = models.Class
     fields = "__all__"
+    success_message = "Class created successfully"
 
 class ClassListView(ListView):
     model = models.Class
@@ -18,9 +20,10 @@ class ClassListView(ListView):
 class ClassDetailView(DetailView):
     model = models.Class    
 
-class ClassUpdateView(PrincipalRequiredMixin, UpdateView):
+class ClassUpdateView(PrincipalRequiredMixin, SuccessMessageMixin, UpdateView):
     model = models.Class
     fields = "__all__"
+    success_message = "Class updated successfully"
 
 @login_required
 def class_delete(request, pk):
@@ -30,12 +33,12 @@ def class_delete(request, pk):
     if request.method == 'POST':
         class_obj = models.Class.objects.get(pk=pk)
         class_obj.delete()
+        messages.success(request, 'Class deleted successfully.')
         return redirect('classes:class_list')
     
 def toggle_captain(request, pk):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
-        print(student_id)
         student = Student.objects.get(student_id=student_id)
         student.is_captain = not student.is_captain
         student.save()
