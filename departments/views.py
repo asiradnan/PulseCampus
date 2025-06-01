@@ -20,6 +20,10 @@ class DepartmentCreateView(SuccessMessageMixin, PrincipalRequiredMixin, CreateVi
 
 class DepartmentDetailView(DetailView):
     model = Department
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['teachers'] = self.object.teacher_set.all()
+        return context
 
 class DepartmentUpdateView(SuccessMessageMixin, UpdateView):
     model = Department
