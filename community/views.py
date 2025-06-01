@@ -8,11 +8,13 @@ from django.utils.decorators import method_decorator
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required   
 from django.db.models import Count, Case, When, IntegerField
+from django.contrib.messages.views import SuccessMessageMixin   
 
 @method_decorator(ratelimit(key='ip', rate='30/d', method=['POST']), name='post')
-class PostCreateView(CreateView):
+class PostCreateView(SuccessMessageMixin, CreateView):
     model = Post
     form_class = PostForm
+    success_message = "Post created successfully."
 
     def form_valid(self, form):
         form.instance.posted_by = self.request.user
@@ -20,9 +22,10 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 @method_decorator(ratelimit(key='ip', rate='30/d', method=['POST']), name='post')
-class PostUpdateView(UpdateView):
+class PostUpdateView(SuccessMessageMixin, UpdateView):
     model = Post
     form_class = PostForm
+    success_message = "Post updated successfully."
 
 class PostDetailView(DetailView):
     model = Post
@@ -60,6 +63,7 @@ class PostListView(ListView):
 def delete_post(request, pk):
     post = Post.objects.get(pk=pk)
     post.delete()
+    messages.success(request, 'Post deleted successfully.')
     return redirect('community:post_list')
 
 def add_comment(request, pk):
@@ -67,6 +71,7 @@ def add_comment(request, pk):
     if request.method == 'POST':
         content = request.POST.get('content')
         Comment.objects.create(post=post, commented_by=request.user, content=content)
+    messages.success(request, 'Comment added successfully.')
     return redirect('community:post_detail', pk=pk)
 
 @login_required
@@ -87,6 +92,7 @@ def upvote(request, pk):
     vote.upvote = True
     vote.downvote = False
     vote.save()
+    messages.success(request, 'Upvoted successfully.')
     return redirect('community:post_detail', pk=pk)
 
 @login_required
@@ -96,4 +102,5 @@ def downvote(request, pk):
     vote.upvote = False
     vote.downvote = True
     vote.save()
+    messages.success(request, 'Downvoted successfully.')
     return redirect('community:post_detail', pk=pk)
