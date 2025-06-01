@@ -40,7 +40,7 @@
         </div>
         <div class="flex items-center gap-4 mt-2">
             <div class="flex items-center gap-2">
-                <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" 
+                <img src="{{ object.supervisor.profile_pic.url }}"
                      class="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-blue-500" 
                      alt="Supervisor">
                 <div>
@@ -49,9 +49,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="mt-5 text-slate-700 text-base max-w-2xl">
-            A vibrant community of students passionate about innovation, technology, and problem-solving. From hackathons to workshops, the club encourages technical growth and leadership.
-        </div> -->
     </div>
 </section>
 
@@ -60,15 +57,10 @@
         <h2 class="text-xl sm:text-2xl font-semibold text-blue-800 flex items-center gap-3">
             <i class="fa-solid fa-user-group text-blue-500"></i> Club Members
         </h2>
-        <!-- <div class="flex items-center gap-4">
-            <span class="text-blue-600 hover:text-blue-800 text-sm font-medium cursor-pointer flex items-center gap-2">
-                <i class="fa-solid fa-plus"></i> Add Member
-            </span>
-        </div> -->
     </div>
     
     <!-- Add Member Form -->
-     {% if request.user.is_authenticated and request.user.teacher and request.user.teacher == object.supervisor %}
+    {% if request.user.is_authenticated and request.user.teacher and request.user.teacher == object.supervisor %}
     <div class="bg-blue-50 rounded-xl p-4 sm:p-6 mb-6">
         <form method="post" action="{% url 'clubs:club_membership' pk=object.pk %}" class="flex flex-col sm:flex-row sm:flex-wrap items-end gap-4">
             {% csrf_token %}
@@ -96,50 +88,50 @@
 
     <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
         {% for member in members %}
-        {% if member.position == 'president' %}
+        {% if member.position == 'President' %}
         <div class="flex flex-col items-center bg-blue-50 rounded-xl py-6 px-4 shadow-sm">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-1.jpg" 
+            <img src="{{ member.student.profile_pic.url }}" 
                  class="w-16 h-16 rounded-full border-2 border-blue-500 mb-3" 
                  alt="President">
             <span class="text-lg font-semibold text-blue-800 text-center">{{member.student.user.first_name}} {{member.student.user.last_name}}</span>
             <span class="bg-blue-600 text-white text-xs px-3 py-1 rounded-full mt-2 mb-1">{{member.get_position_display}}</span>
-            <span class="text-sm text-slate-600 text-center">{{member.student.year}} Year, {{member.student.department.department_name}}</span>
+            <span class="text-sm text-slate-600 text-center">Class: {{member.student.student_class.class_code}}</span>
         </div>
-        {% elif member.position == 'vice_president' %}
+        {% elif member.position == 'Vice President' %}
         <div class="flex flex-col items-center bg-green-50 rounded-xl py-6 px-4 shadow-sm">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" 
+            <img src="{{ member.student.profile_pic.url }}" 
                  class="w-16 h-16 rounded-full border-2 border-green-400 mb-3" 
                  alt="Vice President">
             <span class="text-lg font-semibold text-green-800 text-center">{{member.student.user.first_name}} {{member.student.user.last_name}}</span>
             <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full mt-2 mb-1">{{member.get_position_display}}</span>
-            <span class="text-sm text-slate-600 text-center">{{member.student.year}} Year, {{member.student.department.department_name}}</span>
+            <span class="text-sm text-slate-600 text-center">Class: {{member.student.student_class.class_code}}</span>
         </div>
-        {% elif member.position == 'secretary' %}
+        {% elif member.position == 'Secretary' %}
         <div class="flex flex-col items-center bg-yellow-50 rounded-xl py-6 px-4 shadow-sm">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-6.jpg" 
+            <img src="{{ member.student.profile_pic.url }}" 
                  class="w-16 h-16 rounded-full border-2 border-yellow-400 mb-3" 
                  alt="Secretary">
             <span class="text-lg font-semibold text-yellow-800 text-center">{{member.student.user.first_name}} {{member.student.user.last_name}}</span>
             <span class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-full mt-2 mb-1">{{member.get_position_display}}</span>
-            <span class="text-sm text-slate-600 text-center">{{member.student.year}} Year, {{member.student.department.department_name}}</span>
+            <span class="text-sm text-slate-600 text-center">Class: {{member.student.student_class.class_code}}</span>
         </div>
-        {% elif member.position == 'treasurer' %}
+        {% elif member.position == 'Treasurer' %}
         <div class="flex flex-col items-center bg-purple-50 rounded-xl py-6 px-4 shadow-sm">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-7.jpg" 
+            <img src="{{ member.student.profile_pic.url }}" 
                  class="w-16 h-16 rounded-full border-2 border-purple-400 mb-3" 
                  alt="Treasurer">
             <span class="text-lg font-semibold text-purple-800 text-center">{{member.student.user.first_name}} {{member.student.user.last_name}}</span>
             <span class="bg-purple-600 text-white text-xs px-3 py-1 rounded-full mt-2 mb-1">{{member.get_position_display}}</span>
-            <span class="text-sm text-slate-600 text-center">{{member.student.year}} Year, {{member.student.department.department_name}}</span>
+            <span class="text-sm text-slate-600 text-center">Class: {{member.student.student_class.class_code}}</span>
         </div>
         {% else %}
         <div class="flex flex-col items-center bg-slate-50 rounded-xl py-6 px-4 shadow-sm">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-{{ forloop.counter }}.jpg" 
+            <img src="{{ member.student.profile_pic.url }}" 
                  class="w-16 h-16 rounded-full border-2 border-slate-400 mb-3" 
                  alt="Member">
             <span class="text-lg font-semibold text-slate-800 text-center">{{member.student.user.first_name}} {{member.student.user.last_name}}</span>
             <span class="bg-slate-500 text-white text-xs px-3 py-1 rounded-full mt-2 mb-1">{{member.get_position_display}}</span>
-            <span class="text-sm text-slate-600 text-center">{{member.student.year}} Year, {{member.student.department.department_name}}</span>
+            <span class="text-sm text-slate-600 text-center">Class: {{member.student.student_class.class_code}}</span>
         </div>
         {% endif %}
         {% empty %}
