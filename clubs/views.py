@@ -7,6 +7,7 @@ from PulseCampus.mixins import TeacherOrPrincipalRequiredMixin
 from users.models import Student    
 from django.contrib import messages 
 from django.db import IntegrityError
+from django.db.models import Case, When, IntegerField
 
 class ClubCreateView(TeacherOrPrincipalRequiredMixin, CreateView):
     model = Club
@@ -28,10 +29,21 @@ class ClubListView(ListView):
 
 class ClubDetailView(DetailView):
     model = Club
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['positions'] = Membership.POSITION_CHOICES
-        context['members'] = Membership.objects.filter(club=self.object)
+        context['members'] = Membership.objects.filter(club=self.object).order_by(
+            Case(
+                When(position='President', then=1),
+                When(position='Vice President', then=2),
+                When(position='Secretary', then=3),
+                When(position='Treasurer', then=4),
+                When(position='Member', then=5),
+                default=6,
+                output_field=IntegerField()
+            )
+        )
         return context
 
 class ClubUpdateView(TeacherOrPrincipalRequiredMixin, UpdateView):
@@ -44,5 +56,11 @@ def club_membership(request, pk):
         student_id = request.POST.get('student_id')
         position = request.POST.get('position')
         student = Student.objects.get(student_id=student_id)
+        if Membership.objects.filter(student=student, club=club).exists():
+            if Membership.objects.filter(student=student, club=club, position = position).exists():
+                messages.error(request, 'Student already has this position.')
+                return redirect('clubs:club_detail', pk=pk)
+            Membership.objects.get(student=student, club=club).delete()
         Membership.objects.create(student=student, club=club, position=position)
+        messages.success(request, 'Membership added successfully.')
     return redirect('clubs:club_detail', pk=pk)
