@@ -116,6 +116,17 @@ class ClassViewTestCase(TestCase):
         self.assertEqual(Class.objects.count(),1)
 
     def test_make_captain(self):
+        self.student = Student.objects.create(
+            user=User.objects.create_user(
+                username='student2',
+                password='password',
+                first_name = 'Jane',
+                last_name = 'Doe'
+            ),
+            student_id='123458',
+            address='123 Main St',
+            student_class=self.default_class
+        )
         self.client.login(username='principal', password='password')
         response = self.client.post(reverse('classes:make_captain',args=[self.default_class.pk]),data={'student_id':self.student.student_id})
         self.assertEqual(response.status_code,302)

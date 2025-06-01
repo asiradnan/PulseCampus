@@ -81,3 +81,70 @@ class ClubViewTestCase(TestCase):
         self.assertIn('members', response.context)
         self.assertEqual(list(response.context['members']), list(Membership.objects.filter(club=club)))
         self.assertEqual(response.context['club'], club)
+
+    def test_club_creation_with_duplicate_name(self):
+        Club.objects.create(club_name='Club A', established='2023-01-01', supervisor=self.teacher)
+        self.client.login(username='teacher', password='password')
+        form_data = {
+            'club_name': 'Club A',
+            'established': '2023-01-01',
+            'description': 'This is a test club'
+        }
+        response = self.client.post(reverse('clubs:club_create'), data=form_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'A club with this name already exists.')
+        self.assertEqual(Club.objects.count(), 1)
+
+    def test_duplicate_membership_creation(self):
+        self.client.login(username='teacher', password='password')
+        club = Club.objects.create(club_name='Club D', established='2023-01-01', supervisor=self.teacher)
+        student = Student.objects.create(
+            user=User.objects.create_user(
+                username='student',
+                password='password',
+                first_name = 'Jane',
+                last_name = 'Doe'
+            ),
+            student_id='123456',
+            address='123 Main St',
+            student_class= Class.objects.create(
+                class_code='1',
+                building_number='2',
+                room_number='3'
+            )
+        )
+        Membership.objects.create(club=club, student=student, position='President')
+        form_data = {
+            'student_id': student.student_id,
+            'position': 'President'
+        }
+        response = self.client.post(reverse('clubs:club_membership', args=[club.pk]), data=form_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Membership.objects.count(), 1)
+
+    def test_member_position_update(self):
+        self.client.login(username='teacher', password='password')
+        club = Club.objects.create(club_name='Club E', established='2023-01-01', supervisor=self.teacher)
+        student = Student.objects.create(
+            user=User.objects.create_user(
+                username='student',
+                password='password',
+                first_name = 'Jane',
+                last_name = 'Doe'
+            ),
+            student_id='123456',
+            address='123 Main St',
+            student_class= Class.objects.create(
+                class_code='1',
+                building_number='2',
+                room_number='3'
+            )
+        )
+        membership = Membership.objects.create(club=club, student=student, position='President')
+        form_data = {
+            'student_id': student.student_id,
+            'position': 'Vice President'
+        }
+        response = self.client.post(reverse('clubs:club_membership', args=[club.pk]), data=form_data)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Membership.objects.filter(student=student, position='Vice President').exists()) 

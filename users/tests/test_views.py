@@ -77,6 +77,12 @@ class UsersViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'users/signup.html')
 
+    def test_logged_in_user_signup_view(self):
+        loggedin = self.client.login(username = self.user.username, password = 'pass1234')
+        self.assertTrue(loggedin)
+        response = self.client.get(reverse('users:signup'))
+        self.assertRedirects(response, expected_url=reverse('homepage'), status_code=302, target_status_code=200)
+
     def test_student_signup_view(self):
         response = self.client.get(reverse('users:student_signup'))
         self.assertEqual(response.status_code, 200)
