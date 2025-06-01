@@ -36,16 +36,16 @@ def class_delete(request, pk):
         messages.success(request, 'Class deleted successfully.')
         return redirect('classes:class_list')
     
-def toggle_captain(request, pk):
+def make_captain(request, pk):
     if request.method == 'POST':
         student_id = request.POST.get('student_id')
         selected_student = Student.objects.get(student_id=student_id)
-        make_captain = not selected_student.is_captain
         students_of_the_class = Student.objects.filter(student_class = selected_student.student_class)
         for student in students_of_the_class:
             if student == selected_student:
-                student.is_captain = make_captain
+                student.is_captain = True
             else:
-                student.is_captain = not make_captain
+                student.is_captain = False
             student.save()
+        messages.success(request, 'Captain updated successfully.')
     return redirect('classes:class_detail', pk=pk)

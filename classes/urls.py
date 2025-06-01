@@ -9,5 +9,5 @@ urlpatterns = [
     path('<str:pk>/',views.ClassDetailView.as_view(),name='class_detail'),
     path('<str:pk>/update/',views.ClassUpdateView.as_view(),name='class_update'),
     path('<str:pk>/delete/',views.class_delete,name='class_delete'),
-    path('<str:pk>/toggle_captain/',views.toggle_captain,name='toggle_captain'),
+    path('<str:pk>/make_captain/',views.make_captain,name='make_captain'),
 ]

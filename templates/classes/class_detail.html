@@ -107,13 +107,15 @@
                             </div>
                         </div>
                         {% if user.is_authenticated and user.principal %}
-                        <form method="post" action="{% url 'classes:toggle_captain' pk=class.pk %}">
+                        <form method="post" action="{% url 'classes:make_captain' pk=class.pk %}">
                             {% csrf_token %}
                             <input type="hidden" name="student_id" value="{{ student.student_id }}">
+                            {% if not student.is_captain %}
                             <button type="submit" 
                                     class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
-                                Toggle Captain
+                                Make Captain
                             </button>
+                            {% endif %}
                         </form>
                         {% endif %}
                     </div>
