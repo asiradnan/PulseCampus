@@ -32,7 +32,7 @@ class DepartmentUpdateView(SuccessMessageMixin, UpdateView):
 
 def department_delete(request, pk):
     if not hasattr(request.user, 'principal'):
-        return redirect("home")
+        return redirect("homepage")
     department = Department.objects.get(pk=pk)
     department.delete()
     messages.success(request, "Department deleted successfully")

@@ -41,4 +41,26 @@ class DepartmentViewTestCase(TestCase):
         self.client.post(reverse('departments:department_update', args=[str(department.pk)]),
                                     {'department_name': 'Test department_name Updated', 'room_number': '101', 'building_number': '202'})    
         department.refresh_from_db()
-        self.assertNotEqual(department.department_name,"Team department_name Updated")                              
+        self.assertNotEqual(department.department_name,"Team department_name Updated")   
+
+    def test_department_delete(self):
+        self.client.force_login(self.principal_user)
+        department = Department.objects.create(department_name='Test department_name', room_number='101', building_number='202')
+        response = self.client.post(reverse('departments:department_delete', args=[str(department.pk)]))
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(Department.objects.filter(pk=department.pk).exists())
+
+    def test_other_than_principal_cannot_delete_department(self):
+        self.client.force_login(self.other_user)
+        department = Department.objects.create(department_name='Test department_name', room_number='101', building_number='202')
+        response = self.client.post(reverse('departments:department_delete', args=[str(department.pk)]))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Department.objects.filter(pk=department.pk).exists())
+
+    def test_department_detail_view(self):
+        response = self.client.get(reverse('departments:department_detail', args=[str(self.department.pk)]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, self.department.department_name)
+        self.assertContains(response, self.department.room_number)
+        self.assertContains(response, self.department.building_number)
+        self.assertIn('teachers', response.context)
