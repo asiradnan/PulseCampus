@@ -5,26 +5,31 @@ from django.views.generic.edit import UpdateView
 from .models import Department
 from PulseCampus.mixins import PrincipalRequiredMixin
 from django.shortcuts import redirect
+from django.contrib import messages 
+from django.contrib.messages.views import SuccessMessageMixin
 
 class DepartmentListView(ListView):
     model = Department
 
-class DepartmentCreateView(PrincipalRequiredMixin, CreateView):
+class DepartmentCreateView(SuccessMessageMixin, PrincipalRequiredMixin, CreateView):
     model = Department
     fields = "__all__"
+    success_message = "Department created successfully"
     def test_func(self):
         return hasattr(self.request.user, 'principal')
 
 class DepartmentDetailView(DetailView):
     model = Department
 
-class DepartmentUpdateView(UpdateView):
+class DepartmentUpdateView(SuccessMessageMixin, UpdateView):
     model = Department
     fields = "__all__"
+    success_message = "Department updated successfully"
 
 def department_delete(request, pk):
     if not hasattr(request.user, 'principal'):
         return redirect("home")
     department = Department.objects.get(pk=pk)
     department.delete()
+    messages.success(request, "Department deleted successfully")
     return redirect("departments:department_list")
