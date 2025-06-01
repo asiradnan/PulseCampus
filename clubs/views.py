@@ -5,6 +5,8 @@ from .models import Club, Membership
 from .forms import ClubForm
 from PulseCampus.mixins import TeacherOrPrincipalRequiredMixin
 from users.models import Student    
+from django.contrib import messages 
+from django.db import IntegrityError
 
 class ClubCreateView(TeacherOrPrincipalRequiredMixin, CreateView):
     model = Club
@@ -12,7 +14,14 @@ class ClubCreateView(TeacherOrPrincipalRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.supervisor = self.request.user.teacher
-        return super().form_valid(form)
+        try:
+            response = super().form_valid(form)
+            messages.success(self.request, "Club created successfully.")
+            return response
+        except IntegrityError:
+            form.add_error('club_name', 'A club with this name already exists.')
+            return self.form_invalid(form)
+
 
 class ClubListView(ListView):
     model = Club

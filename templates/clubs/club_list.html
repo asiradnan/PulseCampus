@@ -26,7 +26,8 @@
             <span class="bg-blue-100 text-blue-600 text-xs px-3 py-1 rounded-full">Active</span>
         </div>
         <div class="flex items-center gap-3 mb-4">
-            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-{{ forloop.counter }}.jpg" class="w-10 h-10 rounded-full" alt="Supervisor">
+            <img src="{{ club.supervisor.profile_pic.url }}"
+            class="w-10 h-10 rounded-full" alt="Supervisor">
             <div>
                 <p class="text-sm font-medium text-slate-800">{{ club.supervisor.user.first_name }} {{ club.supervisor.user.last_name }}</p>
                 <p class="text-xs text-slate-500">Supervisor</p>
