@@ -10,3 +10,4 @@ class HomePageView(TemplateView):
         context['teachers'] = Teacher.objects.count() 
         context['students'] = Student.objects.count()
         context['departments'] = Department.objects.count()
+        return context
