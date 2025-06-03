@@ -1,6 +1,5 @@
 from django.views.generic.base import TemplateView
 from departments.models import Department
-from classes.models import Class
 from users.models import Teacher, Student
 
 class HomePageView(TemplateView):
