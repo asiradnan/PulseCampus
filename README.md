@@ -222,6 +222,6 @@ coverage run manage.py test --settings=PulseCampus.settings_test
 
 ##  License
 
-This project is protected under the [SELECT-A-LICENSE](https://choosealicense.com/licenses) License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/) file.
+This project is protected under the [MIT](https://choosealicense.com/licenses/mit/) License. For more details, refer to the [LICENSE](https://github.com/asiradnan/PulseCampus/blob/main/LICENSE) file.
 
 ---
