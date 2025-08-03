@@ -5,7 +5,7 @@
 {% block content %}
 <div class="flex justify-between items-center mb-8">
     <h1 class="text-2xl font-bold text-blue-800">Classes</h1>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user.principal %}
     <a href="{% url 'classes:class_create' %}"
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
         <i class="fa-solid fa-plus"></i> Add Class
