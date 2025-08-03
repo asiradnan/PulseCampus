@@ -1,5 +1,6 @@
 from .settings import *
 
+RATELIMIT_IP_META_KEY = 'REMOTE_ADDR'
 # Optional: Speed up tests by using faster password hashing
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.MD5PasswordHasher',
