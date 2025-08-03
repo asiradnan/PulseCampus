@@ -31,7 +31,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
+RATELIMIT_IP_META_KEY = 'HTTP_X_FORWARDED_FOR'
 # Application definition
 
 INSTALLED_APPS = [
