@@ -8,11 +8,13 @@
         <h1 class="text-2xl font-bold text-blue-800 mb-1">Notices</h1>
         <p class="text-slate-500 text-sm">Latest announcements and updates from departments</p>
     </div>
-    {% if user.is_authenticated and (user.principal or user.teacher) %}
-    <a href="{% url 'notice:notice_create' %}"
-        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
-        <i class="fa-solid fa-plus"></i> New Notice
-    </a>
+    {% if user.is_authenticated  %}
+        {% if user.principal or user.teacher}
+        <a href="{% url 'notice:notice_create' %}"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
+            <i class="fa-solid fa-plus"></i> New Notice
+        </a>
+        {% endif %}
     {% endif %}
 </div>
 
