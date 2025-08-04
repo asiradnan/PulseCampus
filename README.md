@@ -12,6 +12,9 @@ Check out: <a href="https://pulsecampus.asiradnan.com/">https://pulsecampus.asir
     
 </p>
 <br>
+<p align="center">
+  <img src="Screenshots/homepage.png" alt="PulseCampus Demo" width="800"/>
+</p>
 
 ##  Table of Contents
 
