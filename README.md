@@ -17,8 +17,6 @@ Check out: <a href="https://pulsecampus.asiradnan.com/">https://pulsecampus.asir
 </p>
 
 ##  Table of Contents
-
-- [Table of Contents](#table-of-contents)
 - [Overview](#overview)
 - [Tech](#tech)
 - [Features](#features)
@@ -68,12 +66,12 @@ Check out: <a href="https://pulsecampus.asiradnan.com/">https://pulsecampus.asir
 
 #### Departments and Classes
 - Departments with teachers and room number
-- Classes with class captain, room nuumber and students
+- Classes with class captain, room number and students
 - Principal can create, edit and delete departments and classes
 #### Clubs
 - Teacher as supervisor
 - Students as members
-- Different club positions manages by Club Supervisor
+- Different club positions managed by Club Supervisor
 - Teachers can create, edit and delete clubs
 
 #### Announcements and Community
